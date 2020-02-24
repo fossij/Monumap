@@ -3,4 +3,5 @@
     <string name="home_title">MONUMAP</string>
     <string name="route_button">Calculate Route</string>
     <string name="destination_home">Destination</string>
+    <string name="start_home">Start</string>
 </resources>
