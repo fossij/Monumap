@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_prev"
+        android:icon="@drawable/baseline_arrow_back_black_18dp"
+        android:title="@string/title_previous" />
+
+    <!-- <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_home" /> -->
+
+    <item
+        android:id="@+id/nav_next"
+        android:icon="@drawable/baseline_arrow_forward_black_18dp"
+        android:title="@string/title_next" />
+
+</menu>
