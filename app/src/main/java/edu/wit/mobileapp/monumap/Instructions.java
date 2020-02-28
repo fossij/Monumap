@@ -20,9 +20,7 @@ import edu.wit.mobileapp.monumap.Entities.Instruction;
 import edu.wit.mobileapp.monumap.Entities.Route;
 
 public class Instructions extends AppCompatActivity {
-    private TextView routeDescriptionText;
     private Route currentRoute;
-    private ListView listView;
     private InstructionsListAdapter adapter;
 
     private ArrayList<Instruction> instructions;
@@ -55,7 +53,6 @@ public class Instructions extends AppCompatActivity {
 
         // create nav menu
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        routeDescriptionText = findViewById(R.id.route_description);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         // initialize data
@@ -64,12 +61,13 @@ public class Instructions extends AppCompatActivity {
         previousInstructions = new Stack<>();
 
         // generate title
+        TextView routeDescriptionText = findViewById(R.id.route_description);
         routeDescriptionText = findViewById(R.id.route_description);
         routeDescriptionText.setText(createRouteDescriptionText());
 
         // generate instructions
         adapter = new InstructionsListAdapter(this, 0, instructions);
-        listView = findViewById(R.id.instructions_list);
+        ListView listView = findViewById(R.id.instructions_list);
         listView.setAdapter(adapter);
 
         // create click listener for list items
