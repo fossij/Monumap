@@ -4,4 +4,12 @@
     <string name="route_button">Calculate Route</string>
     <string name="destination_home">Destination</string>
     <string name="start_home">Start</string>
+    <string name="title_activity_instructions">Instructions</string>
+    <string name="title_home">Home</string>
+    <string name="title_next">Next</string>
+    <string name="title_previous">Previous</string>
+    <string name="default_instruction_title">No Route</string>
+    <string name="toolbar_cancel">Cancel</string>
+    <string name="direction_icon">Direction icon for instruction</string>
+    <string name="route_description"><![CDATA[%1$s —> %2$s]]></string>
 </resources>
