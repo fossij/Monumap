@@ -1,5 +1,6 @@
 package edu.wit.mobileapp.monumap;
 
+import android.content.ClipData;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -33,13 +35,10 @@ public class Instructions extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.nav_prev:
-                    // get previous instruction (shift list down) --> just add last item from stack to instructions list
-                    // if last, complete dialog
-                    adapter.notifyDataSetChanged();
+                    previousOperation(item);
                     return true;
                 case R.id.nav_next:
-                    // get next instruction (shift list up) --> just remove first item from instructions list and push to stack
-                    adapter.notifyDataSetChanged();
+                    nextOperation(item);
                     return true;
             }
             return false;
@@ -62,7 +61,6 @@ public class Instructions extends AppCompatActivity {
 
         // generate title
         TextView routeDescriptionText = findViewById(R.id.route_description);
-        routeDescriptionText = findViewById(R.id.route_description);
         routeDescriptionText.setText(createRouteDescriptionText());
 
         // generate instructions
@@ -79,6 +77,7 @@ public class Instructions extends AppCompatActivity {
         });
     }
 
+    // options menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -95,8 +94,51 @@ public class Instructions extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // helper methods
     private String createRouteDescriptionText() {
         return getString(R.string.route_description, this.currentRoute.getStart().getLocationName(),
                 this.currentRoute.getDestination().getLocationName());
+    }
+
+    private void previousOperation(MenuItem item) {
+        // get previous instruction (shift list down) --> just add last item from stack to instructions list
+        Instruction previousInstruction = previousInstructions.pop();
+        instructions.add(0, previousInstruction);
+        adapter.notifyDataSetChanged();
+
+        // if next instruction was last, change next button text back to "next" and remove
+        if(instructions.size() == 2) {
+            // change button text back to "next"
+            MenuItem next = findViewById(R.id.nav_next);
+            next.setTitle("Next");
+        }
+
+        // if return back to first instruction, make previous button invisible again
+        if(instructions == currentRoute.getInstructions()) {
+            item.setVisible(false);
+        }
+    }
+
+    private void nextOperation(MenuItem item) {
+        // get next instruction (shift list up) --> just remove first item from instructions list and push to stack
+        Instruction currentInstruction = instructions.remove(0);
+        previousInstructions.push(currentInstruction);
+        adapter.notifyDataSetChanged();
+
+        // set previous button to visible if passed first instruction
+        MenuItem prev = findViewById(R.id.nav_prev);
+        if(!prev.isVisible()) {
+            prev.setVisible(true);
+        }
+
+        // if last instruction, change button to complete route
+        if(instructions.size() == 1) {
+            // change next button text to "complete route"
+            item.setTitle("Complete Route");
+        }
+        // if route completed, create complete dialog
+        else if(instructions.isEmpty()) {
+            // complete dialog
+        }
     }
 }
