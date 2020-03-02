@@ -4,16 +4,18 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import java.io.Serializable;
+
 import edu.wit.mobileapp.monumap.R;
 
-public class Instruction {
+public class Instruction implements Serializable {
     private String text;
     private Direction direction;
     private int duration;
     private int distance;
     private Context context;
 
-    public Instruction(String text, Direction direction, int duration, int distance, Context context) {
+    public Instruction(String text, Direction direction, int duration, int distance) {
         this.text = text;
         this.direction = direction;
         this.duration = duration;
@@ -38,6 +40,10 @@ public class Instruction {
         } else {
             return null;
         }
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     public String getText() {

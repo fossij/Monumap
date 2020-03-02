@@ -12,4 +12,8 @@
     <string name="toolbar_cancel">Cancel</string>
     <string name="direction_icon">Direction icon for instruction</string>
     <string name="route_description"><![CDATA[%1$s —> %2$s]]></string>
+    <string name="cancel_title">Cancel Route</string>
+    <string name="cancel_message">Are you sure you want to cancel this route?</string>
+    <string name="cancel_yes">YES</string>
+    <string name="cancel_no">NO</string>
 </resources>

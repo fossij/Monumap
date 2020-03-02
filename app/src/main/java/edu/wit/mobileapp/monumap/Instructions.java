@@ -1,6 +1,7 @@
 package edu.wit.mobileapp.monumap;
 
 import android.content.ClipData;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import edu.wit.mobileapp.monumap.Adapters.InstructionsListAdapter;
+import edu.wit.mobileapp.monumap.Dialogs.Cancel;
 import edu.wit.mobileapp.monumap.Entities.Instruction;
 import edu.wit.mobileapp.monumap.Entities.Route;
 
@@ -45,14 +47,17 @@ public class Instructions extends AppCompatActivity {
         }
     };
 
+    private BottomNavigationView mBottomNavigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instructions);
 
         // create nav menu
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        mBottomNavigationView = findViewById(R.id.nav_view);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
 
         // initialize data
         currentRoute = (Route) getIntent().getSerializableExtra("currentRoute");
@@ -88,7 +93,8 @@ public class Instructions extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.cancel_button) {
-            // cancel route dialog
+            Cancel cancel = new Cancel();
+            cancel.show(this.getSupportFragmentManager(), "CancelDialog");
         }
 
         return super.onOptionsItemSelected(item);
@@ -109,12 +115,12 @@ public class Instructions extends AppCompatActivity {
         // if next instruction was last, change next button text back to "next" and remove
         if(instructions.size() == 2) {
             // change button text back to "next"
-            MenuItem next = findViewById(R.id.nav_next);
+            MenuItem next = mBottomNavigationView.getMenu().findItem(R.id.nav_next);
             next.setTitle("Next");
         }
 
         // if return back to first instruction, make previous button invisible again
-        if(instructions == currentRoute.getInstructions()) {
+        if(previousInstructions.isEmpty()) {
             item.setVisible(false);
         }
     }
@@ -126,7 +132,7 @@ public class Instructions extends AppCompatActivity {
         adapter.notifyDataSetChanged();
 
         // set previous button to visible if passed first instruction
-        MenuItem prev = findViewById(R.id.nav_prev);
+        MenuItem prev = mBottomNavigationView.getMenu().findItem(R.id.nav_prev);
         if(!prev.isVisible()) {
             prev.setVisible(true);
         }
