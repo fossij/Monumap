@@ -27,6 +27,7 @@ public class InstructionsListAdapter extends ArrayAdapter<Instruction> {
 
         //  instruction direction icon
         ImageView icon = view.findViewById(R.id.instruction_direction_icon);
+        instruction.setContext(getContext()); // must set context to avoid error in direction icon setting
         icon.setImageBitmap(instruction.getDirectionIcon());
 
         // instruction text
@@ -35,11 +36,11 @@ public class InstructionsListAdapter extends ArrayAdapter<Instruction> {
 
         // instruction duration
         TextView duration = view.findViewById(R.id.instruction_duration);
-        duration.setText(instruction.getDuration());
+        duration.setText(String.valueOf(instruction.getDuration()));
 
         // instruction distance
         TextView distance = view.findViewById(R.id.instruction_distance);
-        distance.setText(instruction.getDistance());
+        distance.setText(String.valueOf(instruction.getDistance()));
 
         return view;
     }

@@ -1,6 +1,8 @@
 package edu.wit.mobileapp.monumap.Entities;
 
-public class Location {
+import java.io.Serializable;
+
+public class Location implements Serializable {
     private String building;
     private int floor;
     private int room;
@@ -12,7 +14,7 @@ public class Location {
     }
 
     public String getLocationName() {
-        return this.building + this.room;
+        return this.building + " " + this.room;
     }
 
     public String getBuilding() {
