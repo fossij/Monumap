@@ -16,4 +16,7 @@
     <string name="cancel_message">Are you sure you want to cancel this route?</string>
     <string name="cancel_yes">YES</string>
     <string name="cancel_no">NO</string>
+    <string name="complete_title">Route Complete</string>
+    <string name="complete_message">You have arrived at your destination!</string>
+    <string name="complete_ok">OK</string>
 </resources>
