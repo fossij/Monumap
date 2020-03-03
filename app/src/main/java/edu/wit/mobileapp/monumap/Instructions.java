@@ -20,6 +20,7 @@ import java.util.Stack;
 
 import edu.wit.mobileapp.monumap.Adapters.InstructionsListAdapter;
 import edu.wit.mobileapp.monumap.Dialogs.Cancel;
+import edu.wit.mobileapp.monumap.Dialogs.Complete;
 import edu.wit.mobileapp.monumap.Entities.Instruction;
 import edu.wit.mobileapp.monumap.Entities.Route;
 
@@ -144,7 +145,8 @@ public class Instructions extends AppCompatActivity {
         }
         // if route completed, create complete dialog
         else if(instructions.isEmpty()) {
-            // complete dialog
+            Complete complete = new Complete();
+            complete.show(this.getSupportFragmentManager(), "CompleteDialog");
         }
     }
 }
