@@ -30,6 +30,15 @@
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:text="@string/default_instruction_title" />
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="0"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp" />
+
         <ListView
             android:id="@+id/instructions_list"
             android:layout_width="match_parent"
