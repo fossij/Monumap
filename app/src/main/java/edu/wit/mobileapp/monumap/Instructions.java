@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,10 +28,11 @@ import edu.wit.mobileapp.monumap.Entities.Route;
 public class Instructions extends AppCompatActivity {
     private Route currentRoute;
     private InstructionsListAdapter adapter;
-
+    private ProgressBar progressBar;
     private ArrayList<Instruction> instructions;
     private Stack<Instruction> previousInstructions;
 
+    private BottomNavigationView mBottomNavigationView;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -48,8 +50,6 @@ public class Instructions extends AppCompatActivity {
         }
     };
 
-    private BottomNavigationView mBottomNavigationView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,11 +59,14 @@ public class Instructions extends AppCompatActivity {
         mBottomNavigationView = findViewById(R.id.nav_view);
         mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-
         // initialize data
         currentRoute = (Route) getIntent().getSerializableExtra("currentRoute");
         instructions = (ArrayList<Instruction>) currentRoute.getInstructions().clone();     // clone to not overwrite base instructions for route
         previousInstructions = new Stack<>();
+
+        // create progress bar
+        progressBar = findViewById(R.id.progress_bar);
+        progressBar.setMax(instructions.size());
 
         // generate title
         TextView routeDescriptionText = findViewById(R.id.route_description);
@@ -112,6 +115,7 @@ public class Instructions extends AppCompatActivity {
         Instruction previousInstruction = previousInstructions.pop();
         instructions.add(0, previousInstruction);
         adapter.notifyDataSetChanged();
+        progressBar.setProgress(progressBar.getProgress() - 1);
 
         // if next instruction was last, change next button text back to "next" and remove
         if(instructions.size() == 2) {
@@ -131,6 +135,13 @@ public class Instructions extends AppCompatActivity {
         Instruction currentInstruction = instructions.remove(0);
         previousInstructions.push(currentInstruction);
         adapter.notifyDataSetChanged();
+        progressBar.setProgress(progressBar.getProgress() + 1);
+
+        // if last instruction, change button to complete route
+        if(instructions.size() == 1) {
+            // change next button text to "complete route"
+            item.setTitle("Complete Route");
+        }
 
         // set previous button to visible if passed first instruction
         MenuItem prev = mBottomNavigationView.getMenu().findItem(R.id.nav_prev);
@@ -138,11 +149,6 @@ public class Instructions extends AppCompatActivity {
             prev.setVisible(true);
         }
 
-        // if last instruction, change button to complete route
-        if(instructions.size() == 1) {
-            // change next button text to "complete route"
-            item.setTitle("Complete Route");
-        }
         // if route completed, create complete dialog
         else if(instructions.isEmpty()) {
             Complete complete = new Complete();
