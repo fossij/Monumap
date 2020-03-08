@@ -22,7 +22,10 @@
     <string name="no_route_title">Route Invalid</string>
     <string name="no_route_message">No route could be found between the specified start and destination locations!</string>
     <string name="no_route_ok">OK</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="instruction_info_title"><![CDATA[Instruction #%1$d]]></string>
+    <string name="instruction_info_ok">OK</string>
+    <string name="instruction_duration"><![CDATA[%1$s min.]]></string>
+    <string name="instruction_distance"><![CDATA[%1$s ft.]]></string>
+    <string name="instruction_info_duration"><![CDATA[Duration: %1$s min.]]></string>
+    <string name="instruction_info_distance"><![CDATA[Distance: %1$s ft.]]></string>
 </resources>

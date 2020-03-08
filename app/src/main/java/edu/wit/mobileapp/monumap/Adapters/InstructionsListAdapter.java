@@ -36,11 +36,11 @@ public class InstructionsListAdapter extends ArrayAdapter<Instruction> {
 
         // instruction duration
         TextView duration = view.findViewById(R.id.instruction_duration);
-        duration.setText(String.valueOf(instruction.getDuration()));
+        duration.setText(getContext().getResources().getString(R.string.instruction_duration, String.valueOf(instruction.getDuration())));
 
         // instruction distance
         TextView distance = view.findViewById(R.id.instruction_distance);
-        distance.setText(String.valueOf(instruction.getDistance()));
+        distance.setText(getContext().getResources().getString(R.string.instruction_distance, String.valueOf(instruction.getDistance())));
 
         return view;
     }
