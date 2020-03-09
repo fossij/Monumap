@@ -1,7 +1,5 @@
 package edu.wit.mobileapp.monumap;
 
-import android.content.ClipData;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -22,6 +19,7 @@ import java.util.Stack;
 import edu.wit.mobileapp.monumap.Adapters.InstructionsListAdapter;
 import edu.wit.mobileapp.monumap.Dialogs.Cancel;
 import edu.wit.mobileapp.monumap.Dialogs.Complete;
+import edu.wit.mobileapp.monumap.Dialogs.InstructionInfo;
 import edu.wit.mobileapp.monumap.Entities.Instruction;
 import edu.wit.mobileapp.monumap.Entities.Route;
 
@@ -81,7 +79,9 @@ public class Instructions extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // do something with instruction 'i' on click?
+                InstructionInfo instructionInfo = new InstructionInfo();
+                instructionInfo.setInstruction(instructions.get(i), (i + 1) + previousInstructions.size());
+                instructionInfo.show(getSupportFragmentManager(), "InstructionInfoDialog");
             }
         });
     }
