@@ -75,7 +75,7 @@ public class Map {
     // Description:
     // returns a list of all the nodes
     public List<Node> getNodes() {
-        return (List<Node>) m_Nodes.values();
+        return new ArrayList<>(m_Nodes.values());
     }
 
     // Description:
