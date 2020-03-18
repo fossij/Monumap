@@ -3,6 +3,7 @@ package edu.wit.mobileapp.monumap;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wit.mobileapp.monumap.Entities.Location;
 import edu.wit.mobileapp.monumap.Entities.Route;
 import edu.wit.mobileapp.monumap.Mapping.Edge;
 import edu.wit.mobileapp.monumap.Mapping.JsonMapParser;
@@ -26,7 +27,7 @@ public class Pathfinder {
     }
 
     //runs dijkstra's algorithm with designated source node
-    public void findPaths(Node source)
+    private void findPaths(Node source)
     {
         //dijkstra's algorithm
         ArrayList<Integer> unvisited = new ArrayList<Integer>();
@@ -94,6 +95,7 @@ public class Pathfinder {
             //add shortestID (current visiting node) to visited list
             visited.add(shortestID);
         }
+        previous[src] = -1;
     }
 
     public Map getMap()
@@ -101,10 +103,41 @@ public class Pathfinder {
         return this.map;
     }
 
-    public ArrayList<Edge> findRoute(int dest)
+    private ArrayList<Edge> findRoute(Node dest)
     {
         //this goes through the paths made by dijkstra's algo and picks the one with the
         //relevant endpoint, converts it into a Route object
+        int currNode = dest.getId();
+        ArrayList<Edge> route = new ArrayList<Edge>();
+        while(currNode != -1)
+        {
+            //add an edge to route
+            List<Edge> possibleEdges = map.getEdges(currNode);
+            for(Edge e : possibleEdges)
+            {
+                if(e.contains(previous[currNode]))
+                {
+                    route.add(e);
+                }
+            }
+            //set currNode to previous[currNode]
+            currNode = previous[currNode];
+        }
+
+        return route;
+    }
+
+    public Route makeRoute(Node source, Node destination)
+    {
+        //this converts the whole thing into a Route object for Jose's side of things.
+        Location start = new Location(source.getFloorName(), source.getFloor(), source.getId());
+        Location dest = new Location(destination.getFloorName(), destination.getFloor(), destination.getId());
+
+        findPaths(source);
+        ArrayList<Edge> route = findRoute(destination);
+
+        //need to agree on a mapping format (either add strings to Nodes or add Locations to Nodes, settle on int or double distance, etc)
+
         return null;
     }
 
@@ -122,5 +155,14 @@ public class Pathfinder {
         {
             System.out.println(i + "---" + temp.distance[i] + "---" + temp.previous[i]);
         }
+        ArrayList<Edge> rooot = temp.findRoute(temp.getMap().getNode(11));
+        System.out.println("Route from node 11 to node 4: ");
+        double totalDistance = 0.0;
+        for(Edge e : rooot)
+        {
+            System.out.println(e.toString());
+            totalDistance += e.getDistance();
+        }
+        System.out.println("Total distance in route: " + totalDistance);
     }
 }
