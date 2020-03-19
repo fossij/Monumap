@@ -50,6 +50,10 @@ public class Edge {
             return -1;
         }
 
+        if(m_FixedDistance != Double.NEGATIVE_INFINITY){
+            return m_FixedDistance;
+        }
+
         double ax = m_PointA.getX();
         double ay = m_PointA.getY();
         double bx = m_PointB.getX();
