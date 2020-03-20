@@ -4,6 +4,7 @@ public enum Direction {
     NONE (""),
     LEFT ("left"),
     RIGHT ("right"),
+    BACKWARDS ("backwards"),
     STRAIGHT ("straight"),
     STAIRS ("stairs"),
     ELEVATOR ("elevator");

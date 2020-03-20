@@ -51,16 +51,16 @@ public class JsonMapParser {
             map.addNode(nodes[i]);
         }
 
-        nodes[0].addAttribute("Entrance");
+        nodes[0].addAttribute(NodeAttribute.ENTRANCE);
 
         Edge elevator12 = new Edge(nodes[4], nodes[13]);
         elevator12.setFixedDistance(1);
-        elevator12.addAttribute("Elevator");
+        elevator12.addAttribute(EdgeAttribute.ELEVATOR);
         map.addEdge(elevator12);
 
         Edge elevator23 = new Edge(nodes[13], nodes[22]);
         elevator23.setFixedDistance(1);
-        elevator23.addAttribute("Elevator");
+        elevator23.addAttribute(EdgeAttribute.ELEVATOR);
         map.addEdge(elevator23);
 
 
@@ -80,12 +80,12 @@ public class JsonMapParser {
 
         Edge stairs12 = new Edge(nodes[1], nodes[11]);
         stairs12.setFixedDistance(1.41);
-        stairs12.addAttribute("Stairs");
+        stairs12.addAttribute(EdgeAttribute.ELEVATOR);
         map.addEdge(stairs12);
 
         Edge stairs23 = new Edge(nodes[16], nodes[24]);
         stairs23.setFixedDistance(1.41);
-        stairs23.addAttribute("Stairs");
+        stairs23.addAttribute(EdgeAttribute.ELEVATOR);
         map.addEdge(stairs23);
         return map;
     }
