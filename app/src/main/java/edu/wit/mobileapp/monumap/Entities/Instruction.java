@@ -32,6 +32,9 @@ public class Instruction implements Serializable {
         else if(this.direction == Direction.STRAIGHT) {
             return BitmapFactory.decodeResource(context.getResources(), R.drawable.direction_icon_straight);
         }
+        else if(this.direction == Direction.BACKWARDS) {
+            return BitmapFactory.decodeResource(context.getResources(), R.drawable.direction_icon_backwards);
+        }
         else if(this.direction == Direction.STAIRS) {
             return BitmapFactory.decodeResource(context.getResources(), R.drawable.direction_icon_stairs);
         }
