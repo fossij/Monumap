@@ -8,7 +8,7 @@ public class Edge {
     private Node m_PointA;
     private Node m_PointB;
     private double m_FixedDistance = Double.NEGATIVE_INFINITY;
-    private List<String> m_Attributes = new ArrayList<>();
+    private List<EdgeAttribute> m_Attributes = new ArrayList<>();
 
     // Description:
     // Two nodes must be supplied to define an edge
@@ -50,7 +50,7 @@ public class Edge {
             return -1;
         }
 
-        if(m_FixedDistance != Double.NEGATIVE_INFINITY){
+        if (m_FixedDistance != Double.NEGATIVE_INFINITY) {
             return m_FixedDistance;
         }
 
@@ -103,7 +103,7 @@ public class Edge {
 
     // Description:
     // Add strings to label an edge as stairs, an elevator, hallway, etc.
-    public boolean addAttribute(String s) {
+    public boolean addAttribute(EdgeAttribute s) {
         if (!m_Attributes.contains(s)) {
             m_Attributes.add(s);
             return true;
@@ -113,7 +113,17 @@ public class Edge {
 
     // Description:
     // Return the whether an edge has a particular attribute
-    public boolean getAttribute(String att) {
+    public boolean getAttribute(EdgeAttribute att) {
         return m_Attributes.contains(att);
     }
+
+    // Description
+    // Swaps the order of the nodes, which is A which is B
+    public void swapNodes() {
+        Node temp = m_PointA;
+        m_PointA = m_PointB;
+        m_PointB = temp;
+    }
+
 }
+

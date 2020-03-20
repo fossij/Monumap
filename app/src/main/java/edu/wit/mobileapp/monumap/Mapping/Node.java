@@ -9,7 +9,7 @@ public class Node {
     private Point m_Location = new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
     private int m_Floor = Integer.MIN_VALUE;
     private String m_FloorName;
-    private List<String> m_Attributes = new ArrayList<>();
+    private List<NodeAttribute> m_Attributes = new ArrayList<>();
 
     // Description:
     // a node is defined as an id number and a name
@@ -105,7 +105,7 @@ public class Node {
 
     // Description:
     // Add strings to label a Node as a classroom, hallway, etc.
-    public boolean addAttribute(String s) {
+    public boolean addAttribute(NodeAttribute s) {
         if (!m_Attributes.contains(s)) {
             m_Attributes.add(s);
             return true;
@@ -115,7 +115,7 @@ public class Node {
 
     // Description:
     // Return the whether a node has a particular attribute
-    public boolean getAttribute(String att) {
+    public boolean getAttribute(NodeAttribute att) {
         return m_Attributes.contains(att);
     }
 
@@ -129,4 +129,5 @@ public class Node {
             this.y = y;
         }
     }
+
 }
