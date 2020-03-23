@@ -1,10 +1,9 @@
 package edu.wit.mobileapp.monumap;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-import edu.wit.mobileapp.monumap.Entities.Location;
-import edu.wit.mobileapp.monumap.Entities.Route;
 import edu.wit.mobileapp.monumap.Mapping.Edge;
 import edu.wit.mobileapp.monumap.Mapping.JsonMapParser;
 import edu.wit.mobileapp.monumap.Mapping.Map;
@@ -18,21 +17,19 @@ public class Pathfinder {
     private int previous[];
     private double distance[];
 
-    //constructor, should be called in Home activity
-    public Pathfinder(String jsonfile){
-//        JsonMapParser parseme = new JsonMapParser();
-        this.map = JsonMapParser.testMap();
+    //constructor, sets map attribute to input map and initializes previous and distance arrays
+    public Pathfinder(Map m){
+        this.map = m;
         this.previous = new int[0];
         this.distance = new double[0];
     }
 
-    //runs dijkstra's algorithm with designated source node
+    //runs dijkstra's algorithm with designated source node, modifies previous and distance arrays
     private void findPaths(Node source)
     {
         //dijkstra's algorithm
         ArrayList<Integer> unvisited = new ArrayList<Integer>();
         ArrayList<Integer> visited = new ArrayList<Integer>();
-//        int src = source.getId();
         int src = source.getId();
         distance = new double[map.getNodes().size()];
         previous = new int[map.getNodes().size()];
@@ -76,7 +73,7 @@ public class Pathfinder {
                 Boolean isNodeB = e.getPointB().getId() == shortestID;
                 //add distance of unvisited neighbor to distance array if shorter
                 double newDistance = distance[shortestID] + e.getDistance();
-                System.out.println("Calculated distance for " + e.getPointB().getId() + ": " + newDistance);
+//                System.out.println("Calculated distance for " + e.getPointB().getId() + ": " + newDistance);
                 if(isNodeB)
                 {
                     if(newDistance <= distance[e.getPointA().getId()])
@@ -98,17 +95,23 @@ public class Pathfinder {
         previous[src] = -1;
     }
 
+    //for use in test
     public Map getMap()
     {
         return this.map;
     }
 
-    private ArrayList<Edge> findRoute(Node dest)
+    //for choosing a different map
+    public void setMap(Map m)
     {
-        //this goes through the paths made by dijkstra's algo and picks the one with the
-        //relevant endpoint, converts it into a Route object
+        this.map = m;
+    }
+
+    //goes through previous array and saves edges from destination node to start node
+    private LinkedList<Edge> findRoute(Node dest)
+    {
         int currNode = dest.getId();
-        ArrayList<Edge> route = new ArrayList<Edge>();
+        LinkedList<Edge> route = new LinkedList<Edge>();
         while(currNode != -1)
         {
             //add an edge to route
@@ -117,7 +120,7 @@ public class Pathfinder {
             {
                 if(e.contains(previous[currNode]))
                 {
-                    route.add(e);
+                    route.add(0, e);
                 }
             }
             //set currNode to previous[currNode]
@@ -127,35 +130,32 @@ public class Pathfinder {
         return route;
     }
 
-    public Route makeRoute(Node source, Node destination)
+    //calls findPaths() and findRoute() for return to RouteParser
+    //this is the main method that other classes in the app will use
+    public LinkedList<Edge> makeRoute(Node source, Node destination)
     {
-        //this converts the whole thing into a Route object for Jose's side of things.
-        Location start = new Location(source.getFloorName(), source.getFloor(), source.getId());
-        Location dest = new Location(destination.getFloorName(), destination.getFloor(), destination.getId());
-
         findPaths(source);
-        ArrayList<Edge> route = findRoute(destination);
+        LinkedList<Edge> route = findRoute(destination);
 
-        //need to agree on a mapping format (either add strings to Nodes or add Locations to Nodes, settle on int or double distance, etc)
-
-        return null;
+        return route;
     }
 
+    //small test using test map
     public static void main(String args[])
     {
         //make the sample map
-        Pathfinder temp = new Pathfinder("sample.json");
+        Pathfinder temp = new Pathfinder(JsonMapParser.testMap());
         //pretend the start is ________
         Node src = temp.getMap().getNode(4);
+        Node dest = temp.getMap().getNode(11);
         //run the thing
-        temp.findPaths(src);
+        LinkedList<Edge> rooot = temp.makeRoute(src, dest);
         //see if it's true?
         System.out.println("NodeID---Distance---Previous");
         for(int i=0; i<temp.map.getNodes().size(); i++)
         {
             System.out.println(i + "---" + temp.distance[i] + "---" + temp.previous[i]);
         }
-        ArrayList<Edge> rooot = temp.findRoute(temp.getMap().getNode(11));
         System.out.println("Route from node 11 to node 4: ");
         double totalDistance = 0.0;
         for(Edge e : rooot)
