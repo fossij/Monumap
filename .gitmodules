@@ -1,0 +1,3 @@
+[submodule "Sprint1DemoApp"]
+	path = Sprint1DemoApp
+	url = https://github.com/arcec-cs/Beacon_Monitor_Demo_App.git
