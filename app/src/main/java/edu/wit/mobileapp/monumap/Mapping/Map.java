@@ -90,5 +90,23 @@ public class Map {
     public boolean containsNode(int id) {
         return m_Nodes.containsKey(id);
     }
+
+    // Description:
+    // Returns a new Map object without Edges with attribute 'STAIRS'
+    public Map getHandiMap()
+    {
+        Map newMap = new Map();
+        EdgeAttribute stairs = EdgeAttribute.STAIRS;
+        for(Edge e : m_Edges)
+        {
+            if(e.getAttribute(stairs))
+            {
+                continue;
+            } else {
+                newMap.addEdge(e);
+            }
+        }
+        return newMap;
+    }
 }
 
