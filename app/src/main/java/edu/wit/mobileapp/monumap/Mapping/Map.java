@@ -1,6 +1,5 @@
 package edu.wit.mobileapp.monumap.Mapping;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -113,7 +112,7 @@ public class Map {
     // Returns a new Map object without Edges with attribute 'STAIRS'
     public Map getHandiMap()
     {
-        Map newMap = new Map();
+        Map newMap = new Map(this.m_Name + "_handimap");
         EdgeAttribute stairs = EdgeAttribute.STAIRS;
         for(Edge e : m_Edges)
         {
@@ -123,6 +122,10 @@ public class Map {
             } else {
                 newMap.addEdge(e);
             }
+        }
+        for(Node n : getNodes())
+        {
+            newMap.addNode(n);
         }
         return newMap;
     }
