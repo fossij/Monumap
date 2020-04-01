@@ -1,5 +1,4 @@
 package edu.wit.mobileapp.monumap.Mapping;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,6 +81,9 @@ public class Node {
         return m_Id;
     }
 
+    public String getName(){
+        return m_Name;
+    }
 
     @Override
     public String toString() {
@@ -120,14 +122,9 @@ public class Node {
     }
 
     // Description:
-    // Private class to store x and y values
-    private class Point {
-        double x, y;
-
-        public Point(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
+    // Lists all the attributes for the node
+    public List<NodeAttribute> getAttributes() {
+        return m_Attributes;
     }
-
 }
+
