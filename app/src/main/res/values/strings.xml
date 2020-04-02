@@ -39,4 +39,9 @@
     <string name="preferences">MONUMAP_PREFS</string>
     <string name="sp_wheelchairAccessibilityEnabled">wheelchairAccessibilityEnabled</string>
     <string name="sp_textToSpeechEnabled">textToSpeechEnabled</string>
+    <string name="nav_recent_routes_text">Recent Routes</string>
+    <string name="recent_routes_title">Recent Routes</string>
+    <string name="recent_routes_calculate">Calculate</string>
+    <string name="recent_routes_cancel">Cancel</string>
+    <string name="recent_routes_no_routes_text">You have no recent routes.</string>
 </resources>
