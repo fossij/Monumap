@@ -28,4 +28,15 @@
     <string name="instruction_distance"><![CDATA[%1$s ft.]]></string>
     <string name="instruction_info_duration"><![CDATA[Duration: %1$s min.]]></string>
     <string name="instruction_info_distance"><![CDATA[Distance: %1$s ft.]]></string>
+    <string name="nav_settings_text">Settings</string>
+    <string name="nav_drawer_open">Open Navigation Drawer</string>
+    <string name="nav_drawer_close">Close Navigation Drawer</string>
+    <string name="settings_save">SAVE</string>
+    <string name="settings_cancel">Cancel</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_wheelchair_text">Enable wheelchair accessibility</string>
+    <string name="settings_text_to_speech_text">Enable text-to-speech instructions</string>
+    <string name="preferences">MONUMAP_PREFS</string>
+    <string name="sp_wheelchairAccessibilityEnabled">wheelchairAccessibilityEnabled</string>
+    <string name="sp_textToSpeechEnabled">textToSpeechEnabled</string>
 </resources>
