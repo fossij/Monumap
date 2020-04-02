@@ -44,4 +44,5 @@
     <string name="recent_routes_calculate">Calculate</string>
     <string name="recent_routes_cancel">Cancel</string>
     <string name="recent_routes_no_routes_text">You have no recent routes.</string>
+    <string name="settings_recent_routes_text">Number of recent routes to be displayed</string>
 </resources>
