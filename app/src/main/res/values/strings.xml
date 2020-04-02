@@ -44,5 +44,11 @@
     <string name="recent_routes_calculate">Calculate</string>
     <string name="recent_routes_cancel">Cancel</string>
     <string name="recent_routes_no_routes_text">You have no recent routes.</string>
-    <string name="settings_recent_routes_text">Number of recent routes to be displayed</string>
+    <string name="settings_recent_routes_text">Number of recent routes</string>
+    <string name="sp_recentRoutesPosition">recentRoutesPosition</string>
+    <string name="sp_recentRoutesNumber">recentRoutesNumber</string>
+    <string name="recent_routes_start_location"><![CDATA[Start: %1$s]]></string>
+    <string name="recent_routes_destination_location"><![CDATA[Destination: %1$s]]></string>
+    <string name="recent_routes_duration"><![CDATA[Duration: %1$d min.]]></string>
+    <string name="recent_routes_distance"><![CDATA[Distance: %1$d ft.]]></string>
 </resources>
