@@ -53,14 +53,18 @@ public class Instructions extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instructions);
 
-        // create nav menu
-        mBottomNavigationView = findViewById(R.id.nav_view);
-        mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
         // initialize data
         currentRoute = (Route) getIntent().getSerializableExtra("currentRoute");
         instructions = (ArrayList<Instruction>) currentRoute.getInstructions().clone();     // clone to not overwrite base instructions for route
         previousInstructions = new Stack<>();
+
+        // create nav menu
+        mBottomNavigationView = findViewById(R.id.nav_view);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        if(instructions.size() == 1) {
+            MenuItem nextButton = mBottomNavigationView.getMenu().findItem(R.id.nav_next);
+            nextButton.setTitle("Complete Route");
+        }
 
         // create progress bar
         progressBar = findViewById(R.id.progress_bar);
@@ -143,16 +147,17 @@ public class Instructions extends AppCompatActivity {
             item.setTitle("Complete Route");
         }
 
+        // if route completed, create complete dialog
+        if(instructions.isEmpty()) {
+            Complete complete = new Complete();
+            complete.show(this.getSupportFragmentManager(), "CompleteDialog");
+            return;
+        }
+
         // set previous button to visible if passed first instruction
         MenuItem prev = mBottomNavigationView.getMenu().findItem(R.id.nav_prev);
         if(!prev.isVisible()) {
             prev.setVisible(true);
-        }
-
-        // if route completed, create complete dialog
-        else if(instructions.isEmpty()) {
-            Complete complete = new Complete();
-            complete.show(this.getSupportFragmentManager(), "CompleteDialog");
         }
     }
 }
