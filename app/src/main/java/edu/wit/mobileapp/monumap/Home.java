@@ -17,6 +17,7 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
+import edu.wit.mobileapp.monumap.Dialogs.RecentRoutes;
 import edu.wit.mobileapp.monumap.Dialogs.Settings;
 import edu.wit.mobileapp.monumap.Entities.Direction;
 import edu.wit.mobileapp.monumap.Entities.Instruction;
@@ -65,6 +66,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 instructions.add(new Instruction("Take a left", Direction.LEFT, 1, 1));
                 instructions.add(new Instruction("Take a right", Direction.RIGHT, 1, 1));
                 instructions.add(new Instruction("Go down the stairs", Direction.STAIRS, 1, 1));
+                instructions.add(new Instruction("Take a left", Direction.LEFT, 1, 1));
+                instructions.add(new Instruction("Take a right", Direction.RIGHT, 1, 1));
+                instructions.add(new Instruction("Go down the stairs", Direction.STAIRS, 1, 1));
+                instructions.add(new Instruction("Take a left", Direction.LEFT, 1, 1));
+                instructions.add(new Instruction("Take a right", Direction.RIGHT, 1, 1));
+                instructions.add(new Instruction("Go down the stairs", Direction.STAIRS, 1, 1));
                 int duration = 3;
                 int distance = 3;
 
@@ -86,6 +93,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 Settings settings = new Settings();
                 settings.setSharedPreferences(sharedPreferences);
                 settings.show(this.getSupportFragmentManager(), "SettingsDialog");
+                drawerLayout.closeDrawer(GravityCompat.START);
+                break;
+            case R.id.nav_recent_routes:
+                RecentRoutes recentRoutes = new RecentRoutes();
+                ArrayList<Route> recentRoutesList = new ArrayList<>();
+                recentRoutes.setRecentRoutes(recentRoutesList);
+                recentRoutes.show(this.getSupportFragmentManager(), "RecentRoutesDialog");
                 drawerLayout.closeDrawer(GravityCompat.START);
                 break;
             default:
