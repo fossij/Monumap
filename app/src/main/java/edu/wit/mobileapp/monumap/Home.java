@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.Button;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import edu.wit.mobileapp.monumap.Dialogs.Settings;
 import edu.wit.mobileapp.monumap.Entities.Direction;
@@ -55,7 +57,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             @Override
             public void onClick(View view) {
                 // get start location data --> save to route
-                Location start = new Location("Wentworth", 2, 205);
+                Location start = new Location("Wentworth", 2, 208);
 
                 // get end location data --> save to route
                 Location destination = new Location("Wentworth", 1, 107);
@@ -95,11 +97,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 drawerLayout.closeDrawer(GravityCompat.START);
                 break;
             case R.id.nav_recent_routes:
-                ArrayList<Route> recentRoutesList = createTestRoutes();
                 Intent i = new Intent(Home.this, RecentRoutes.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("recentRoutesList", recentRoutesList);
-                i.putExtras(bundle);
                 startActivity(i);
                 break;
             default:
@@ -121,21 +119,5 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void initializeStorage() {
         sharedPreferences = getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
-    }
-
-    private ArrayList<Route> createTestRoutes() {
-        ArrayList<Route> res = new ArrayList<>();
-        for(int i = 0; i < 14; i++) {
-            Location start = new Location("Wentworth", 1, i);
-            Location destination = new Location("Wentworth", 1, 107);
-            ArrayList<Instruction> instructions = new ArrayList<>();
-            instructions.add(new Instruction("Take a right", Direction.RIGHT, 1, 1));
-            instructions.add(new Instruction("Go down the stairs", Direction.STAIRS, 1, 1));
-            int duration = 3;
-            int distance = 3;
-            res.add(new Route(instructions, start, destination, duration, distance, 0));
-        }
-
-        return res;
     }
 }

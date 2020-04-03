@@ -10,6 +10,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import edu.wit.mobileapp.monumap.Adapters.RecentRoutesListAdapter;
@@ -23,12 +27,14 @@ public class RecentRoutes extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recent_routes);
 
-        // take in list and initialize
-        ArrayList<Route> tmpRecentRoutesList = (ArrayList<Route>) getIntent().getSerializableExtra("recentRoutesList");
-        ArrayList<Route> recentRoutesList = new ArrayList<>();
-
         // created shared preferences
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
+
+        // take in list and initialize
+        ArrayList<Route> tmpRecentRoutesList = getRecentRoutes(sharedPreferences);
+        ArrayList<Route> recentRoutesList = new ArrayList<>();
+
+        // modify list based on specified number from settings
         int numRoutes = sharedPreferences.getInt(getString(R.string.sp_recentRoutesNumber), 1);
         if(numRoutes > tmpRecentRoutesList.size()) {
             numRoutes = tmpRecentRoutesList.size();
@@ -52,8 +58,6 @@ public class RecentRoutes extends AppCompatActivity {
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // add route to top of recent routes
-
                 Intent i = new Intent(RecentRoutes.this, Instructions.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("currentRoute", selectedRoute);
@@ -73,5 +77,39 @@ public class RecentRoutes extends AppCompatActivity {
                 calculateButton.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    public static void updateRecentRoutes(SharedPreferences sharedPreferences, Route recentRoute) {
+        // get recent routes list
+        ArrayList<Route> recentRoutesList = getRecentRoutes(sharedPreferences);
+
+        // update list with new Route
+        recentRoutesList.add(0, recentRoute);
+        if(recentRoutesList.size() > 20) {
+            int count = recentRoutesList.size();
+            while(count > 20) {
+                recentRoutesList.remove(count);
+                count--;
+            }
+        }
+
+        // put list using Gson
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(recentRoutesList);
+        editor.putString("recentRoutesList", json);
+        editor.apply();
+    }
+
+    private static ArrayList<Route> getRecentRoutes(SharedPreferences sharedPreferences) {
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("recentRoutesList", null);
+        Type type = new TypeToken<ArrayList<Route>>() {}.getType();
+        ArrayList<Route> recentRoutesList = gson.fromJson(json, type);
+
+        if(recentRoutesList == null) {
+            recentRoutesList = new ArrayList<>();
+        }
+        return recentRoutesList;
     }
 }
