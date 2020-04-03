@@ -1,7 +1,6 @@
 package edu.wit.mobileapp.monumap;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -9,22 +8,15 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import edu.wit.mobileapp.monumap.Adapters.RecentRoutesListAdapter;
-import edu.wit.mobileapp.monumap.Dialogs.RecentRoutes;
 import edu.wit.mobileapp.monumap.Dialogs.Settings;
 import edu.wit.mobileapp.monumap.Entities.Direction;
 import edu.wit.mobileapp.monumap.Entities.Instruction;
@@ -104,11 +96,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 break;
             case R.id.nav_recent_routes:
                 ArrayList<Route> recentRoutesList = createTestRoutes();
-                int numRoutes = sharedPreferences.getInt(getString(R.string.sp_recentRoutesNumber), 1);
-                RecentRoutes recentRoutes = new RecentRoutes();
-                recentRoutes.setRecentRoutes(recentRoutesList, numRoutes);
-                recentRoutes.show(this.getSupportFragmentManager(), "RecentRoutesDialog");
-                drawerLayout.closeDrawer(GravityCompat.START);
+                Intent i = new Intent(Home.this, RecentRoutes.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("recentRoutesList", recentRoutesList);
+                i.putExtras(bundle);
+                startActivity(i);
                 break;
             default:
                 return false;
@@ -133,7 +125,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private ArrayList<Route> createTestRoutes() {
         ArrayList<Route> res = new ArrayList<>();
-        for(int i = 0; i < 4; i++) {
+        for(int i = 0; i < 14; i++) {
             Location start = new Location("Wentworth", 1, i);
             Location destination = new Location("Wentworth", 1, 107);
             ArrayList<Instruction> instructions = new ArrayList<>();

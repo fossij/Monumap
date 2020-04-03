@@ -17,7 +17,7 @@ import edu.wit.mobileapp.monumap.R;
 
 public class Settings extends DialogFragment {
     private SharedPreferences sharedPreferences;
-    private final Integer[] recentRoutesOptions = new Integer[]{1,2,3,4,5};
+    private final Integer[] recentRoutesOptions = new Integer[]{1,2,3,4,5,10,20};
 
     public void setSharedPreferences(SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
