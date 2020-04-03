@@ -1,6 +1,5 @@
 package edu.wit.mobileapp.monumap.Mapping;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -107,6 +106,28 @@ public class Map {
     // Returns whether or not the id to a node is contained in the map
     public boolean containsNode(int id) {
         return m_Nodes.containsKey(id);
+    }
+
+    // Description:
+    // Returns a new Map object without Edges with attribute 'STAIRS'
+    public Map getHandiMap()
+    {
+        Map newMap = new Map(this.m_Name + "_handimap");
+        EdgeAttribute stairs = EdgeAttribute.STAIRS;
+        for(Edge e : m_Edges)
+        {
+            if(e.getAttribute(stairs))
+            {
+                continue;
+            } else {
+                newMap.addEdge(e);
+            }
+        }
+        for(Node n : getNodes())
+        {
+            newMap.addNode(n);
+        }
+        return newMap;
     }
 }
 
