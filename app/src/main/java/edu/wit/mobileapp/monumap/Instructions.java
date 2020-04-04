@@ -1,5 +1,6 @@
 package edu.wit.mobileapp.monumap;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -57,6 +58,9 @@ public class Instructions extends AppCompatActivity {
         currentRoute = (Route) getIntent().getSerializableExtra("currentRoute");
         instructions = (ArrayList<Instruction>) currentRoute.getInstructions().clone();     // clone to not overwrite base instructions for route
         previousInstructions = new Stack<>();
+
+        // store new route in recent routes
+        RecentRoutes.updateRecentRoutes(getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE), currentRoute);
 
         // create nav menu
         mBottomNavigationView = findViewById(R.id.nav_view);
