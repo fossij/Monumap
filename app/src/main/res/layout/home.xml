@@ -52,19 +52,13 @@
 
             <Spinner
                 android:id="@+id/start_building"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="30dp" />
-
-            <Spinner
-                android:id="@+id/start_floor"
-                android:layout_width="wrap_content"
+                android:layout_width="143dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="30dp" />
 
             <Spinner
                 android:id="@+id/start_room"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
         </LinearLayout>
@@ -88,19 +82,13 @@
 
             <Spinner
                 android:id="@+id/destination_building"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="30dp" />
-
-            <Spinner
-                android:id="@+id/destination_floor"
-                android:layout_width="wrap_content"
+                android:layout_width="143dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="30dp" />
 
             <Spinner
                 android:id="@+id/destination_room"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
 

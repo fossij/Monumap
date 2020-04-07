@@ -20,8 +20,8 @@ public class RouteParser {
             return null;
         }
 
-        for (int i = 0; i < list.size() - 2; i++) {
-            orientEdges(list.get(i), list.get(i + 1));
+        for (int i = 1; i < list.size(); i++) {
+            orientEdges(list.get(i-1), list.get(i));
         }
 
         ArrayList<Instruction> instructions = new ArrayList<>();
@@ -41,41 +41,50 @@ public class RouteParser {
             } else {
                 d = getDirection(list.get(i - 1), currentEdge);
             }
+
+            String text = getText(d, currentEdge.getPointB().getFloor());
+
             continuedDistance += currentEdge.getDistance();
             if (d == Direction.STRAIGHT && i != list.size() - 1) {
                 continue;
+            }else{
+                instructions.add(new Instruction(text, d, (int) (continuedDistance * feetPerSecond), (int) continuedDistance));
+                continuedDistance = 0;
             }
 
-            String text;
-            switch (d) {
-                case LEFT:
-                    text = "Take a left turn";
-                    break;
-                case RIGHT:
-                    text = "Take a right turn";
-                    break;
-                case STRAIGHT:
-                    text = "Go straight to your destination";
-                    break;
-                case BACKWARDS:
-                    text = "Turn around";
-                    break;
-                case STAIRS:
-                    text = "Take the stairs to the " + ordinal(currentEdge.getPointB().getFloor()) + " floor";
-                    break;
-                case ELEVATOR:
-                    text = "Take the elevator to the " + ordinal(currentEdge.getPointB().getFloor()) + " floor";
-                    break;
-                default:
-                    text = "this shouldn't have happened";
-            }
-
-            instructions.add(new Instruction(text, d, (int) (distance * feetPerSecond), (int) distance));
+            //instructions.add(new Instruction(text, d, (int) (distance * feetPerSecond), (int) distance));
         }
         Location source = new Location(building1, list.get(0).getPointA().getFloor(), 0);
         Location dest = new Location(building2, list.get(list.size() - 1).getPointB().getFloor(), 0);
 
         return new Route(instructions, source, dest, (int) (totalDistance * feetPerSecond), (int) totalDistance, 0);
+    }
+
+    private static String getText(Direction d, int floor){
+        String text;
+        switch (d) {
+            case LEFT:
+                text = "Take a left turn";
+                break;
+            case RIGHT:
+                text = "Take a right turn";
+                break;
+            case STRAIGHT:
+                text = "Go straight to your destination";
+                break;
+            case BACKWARDS:
+                text = "Turn around";
+                break;
+            case STAIRS:
+                text = "Take the stairs to the " + ordinal(floor) + " floor";
+                break;
+            case ELEVATOR:
+                text = "Take the elevator to the " + ordinal(floor) + " floor";
+                break;
+            default:
+                text = "this shouldn't have happened";
+        }
+        return text;
     }
 
     private static Node otherNode(Node n, Edge e) {
