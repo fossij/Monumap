@@ -19,14 +19,7 @@ public class NoRoute extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.no_route_message)
                 .setTitle(R.string.no_route_title)
-                .setPositiveButton(R.string.no_route_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // complete route, go back to home screen
-                        Intent intent = new Intent(getContext(), null);
-                        startActivity(intent);
-                    }
-                });
+                .setPositiveButton(R.string.no_route_ok, null);
 
         return builder.create();
     }

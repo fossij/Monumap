@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import edu.wit.mobileapp.monumap.Controllers.HomeController;
+import edu.wit.mobileapp.monumap.Dialogs.NoRoute;
 import edu.wit.mobileapp.monumap.Dialogs.Settings;
 import edu.wit.mobileapp.monumap.Entities.Direction;
 import edu.wit.mobileapp.monumap.Entities.Instruction;
@@ -95,51 +96,29 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         NavigationView navigationView = findViewById(R.id.home_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // get list of options for each dropdown and display
-
         // get dropdown selections on button press
         final Button calculateRoute = findViewById(R.id.calculate_route);
         calculateRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
+                // get dropdown entries
                 Spinner startRooms = (Spinner) findViewById(R.id.start_room);
                 Spinner endRooms = (Spinner) findViewById(R.id.destination_room);
                 Spinner startBuilding = (Spinner) findViewById(R.id.start_building);
                 Spinner endBuilding = (Spinner) findViewById(R.id.destination_building);
 
                 Route route = m_HomeController.pathFind(startBuilding.getSelectedItem().toString(), startRooms.getSelectedItem().toString(), endBuilding.getSelectedItem().toString(), endRooms.getSelectedItem().toString());
-
-
-
-//                // get start location data --> save to route
-//                Location start = new Location("Wentworth", 2, 208);
-//
-//                // get end location data --> save to route
-//                Location destination = new Location("Wentworth", 1, 107);
-//
-//                // calculate route data
-//                ArrayList<Instruction> instructions = new ArrayList<>();
-//                instructions.add(new Instruction("Take a left", Direction.LEFT, 1, 1));
-//                instructions.add(new Instruction("Take a right", Direction.RIGHT, 1, 1));
-//                instructions.add(new Instruction("Take the stairs", Direction.STAIRS, 1, 1));
-//                //instructions.add(new Instruction("Take a left", Direction.LEFT, 1, 1));
-//                //instructions.add(new Instruction("Take a right", Direction.RIGHT, 1, 1));
-//                //instructions.add(new Instruction("Take the stairs", Direction.STAIRS, 1, 1));
-//                //instructions.add(new Instruction("Take a left", Direction.LEFT, 1, 1));
-//                //instructions.add(new Instruction("Take a right", Direction.RIGHT, 1, 1));
-//                //instructions.add(new Instruction("Take the stairs", Direction.STAIRS, 1, 1));
-//                int duration = 3;
-//                int distance = 3;
-//
-//                // store in new route and go to instructions page
-//                Route route = new Route(instructions, start, destination, duration, distance, 0);
-                Intent i = new Intent(Home.this, Instructions.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("currentRoute", route);
-                i.putExtras(bundle);
-                startActivity(i);
+                if(route == null) {
+                    NoRoute noRoute = new NoRoute();
+                    noRoute.show(getSupportFragmentManager(), "NoRouteDialog");
+                } else {
+                    // send route to instructions page
+                    Intent i = new Intent(Home.this, Instructions.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("currentRoute", route);
+                    i.putExtras(bundle);
+                    startActivity(i);
+                }
             }
         });
     }
