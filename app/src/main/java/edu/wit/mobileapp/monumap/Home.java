@@ -11,29 +11,75 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import edu.wit.mobileapp.monumap.Controllers.HomeController;
 import edu.wit.mobileapp.monumap.Dialogs.Settings;
 import edu.wit.mobileapp.monumap.Entities.Direction;
 import edu.wit.mobileapp.monumap.Entities.Instruction;
 import edu.wit.mobileapp.monumap.Entities.Location;
 import edu.wit.mobileapp.monumap.Entities.Route;
+import edu.wit.mobileapp.monumap.Mapping.JsonMapParser;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
     private SharedPreferences sharedPreferences;
+    private HomeController m_HomeController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
         initializeStorage();
+        JsonMapParser.setContext(getApplicationContext());
+
+        m_HomeController = new HomeController(this, getApplicationContext());
+        m_HomeController.open();
+        final String tag = "buildings";
+        Spinner startBuilding = (Spinner) findViewById(R.id.start_building);
+        startBuilding.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                List<String> newRooms = m_HomeController.getRooms(parent.getSelectedItem().toString());
+                setStartRooms(newRooms);
+                //Log.v(tag, "Attemping to update");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                setStartRooms(new ArrayList<String>());
+            }
+        });
+        setStartBuildings(m_HomeController.getBuildingNames());
+
+
+        Spinner endBuilding = (Spinner) findViewById(R.id.destination_building);
+        endBuilding.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                List<String> newRooms = m_HomeController.getRooms(parent.getSelectedItem().toString());
+                setEndRooms(newRooms);
+                //Log.v(tag, "Attemping to update");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                setEndRooms(new ArrayList<String>());
+            }
+        });
+        setEndBuildings(m_HomeController.getBuildingNames());
 
         // create toolbar
         Toolbar toolbar = findViewById(R.id.home_toolbar);
@@ -52,32 +98,43 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         // get list of options for each dropdown and display
 
         // get dropdown selections on button press
-        Button calculateRoute = findViewById(R.id.calculate_route);
+        final Button calculateRoute = findViewById(R.id.calculate_route);
         calculateRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // get start location data --> save to route
-                Location start = new Location("Wentworth", 2, 208);
 
-                // get end location data --> save to route
-                Location destination = new Location("Wentworth", 1, 107);
 
-                // calculate route data
-                ArrayList<Instruction> instructions = new ArrayList<>();
-                instructions.add(new Instruction("Take a left", Direction.LEFT, 1, 1));
-                instructions.add(new Instruction("Take a right", Direction.RIGHT, 1, 1));
-                instructions.add(new Instruction("Take the stairs", Direction.STAIRS, 1, 1));
-                //instructions.add(new Instruction("Take a left", Direction.LEFT, 1, 1));
-                //instructions.add(new Instruction("Take a right", Direction.RIGHT, 1, 1));
-                //instructions.add(new Instruction("Take the stairs", Direction.STAIRS, 1, 1));
-                //instructions.add(new Instruction("Take a left", Direction.LEFT, 1, 1));
-                //instructions.add(new Instruction("Take a right", Direction.RIGHT, 1, 1));
-                //instructions.add(new Instruction("Take the stairs", Direction.STAIRS, 1, 1));
-                int duration = 3;
-                int distance = 3;
+                Spinner startRooms = (Spinner) findViewById(R.id.start_room);
+                Spinner endRooms = (Spinner) findViewById(R.id.destination_room);
+                Spinner startBuilding = (Spinner) findViewById(R.id.start_building);
+                Spinner endBuilding = (Spinner) findViewById(R.id.destination_building);
 
-                // store in new route and go to instructions page
-                Route route = new Route(instructions, start, destination, duration, distance, 0);
+                Route route = m_HomeController.pathFind(startBuilding.getSelectedItem().toString(), startRooms.getSelectedItem().toString(), endBuilding.getSelectedItem().toString(), endRooms.getSelectedItem().toString());
+
+
+
+//                // get start location data --> save to route
+//                Location start = new Location("Wentworth", 2, 208);
+//
+//                // get end location data --> save to route
+//                Location destination = new Location("Wentworth", 1, 107);
+//
+//                // calculate route data
+//                ArrayList<Instruction> instructions = new ArrayList<>();
+//                instructions.add(new Instruction("Take a left", Direction.LEFT, 1, 1));
+//                instructions.add(new Instruction("Take a right", Direction.RIGHT, 1, 1));
+//                instructions.add(new Instruction("Take the stairs", Direction.STAIRS, 1, 1));
+//                //instructions.add(new Instruction("Take a left", Direction.LEFT, 1, 1));
+//                //instructions.add(new Instruction("Take a right", Direction.RIGHT, 1, 1));
+//                //instructions.add(new Instruction("Take the stairs", Direction.STAIRS, 1, 1));
+//                //instructions.add(new Instruction("Take a left", Direction.LEFT, 1, 1));
+//                //instructions.add(new Instruction("Take a right", Direction.RIGHT, 1, 1));
+//                //instructions.add(new Instruction("Take the stairs", Direction.STAIRS, 1, 1));
+//                int duration = 3;
+//                int distance = 3;
+//
+//                // store in new route and go to instructions page
+//                Route route = new Route(instructions, start, destination, duration, distance, 0);
                 Intent i = new Intent(Home.this, Instructions.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("currentRoute", route);
@@ -119,5 +176,57 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void initializeStorage() {
         sharedPreferences = getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE);
+    }
+
+    private void setStartBuildings(List<String> buildings){
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, buildings);
+//        String tag = "buildings";
+//        Log.v(tag, String.valueOf(buildings.size()));
+//        for(int i = 0; i < adapter.getCount(); i++){
+//            Log.v(tag, adapter.getItem(i));
+//        }
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner startBuilding = (Spinner) findViewById(R.id.start_building);
+        startBuilding.setAdapter(adapter);
+        startBuilding.invalidate();
+    }
+
+    private void setStartRooms(List<String> rooms){
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, rooms);
+//        String tag = "buildings";
+//        Log.v(tag, String.valueOf(rooms.size()));
+//        for(int i = 0; i < adapter.getCount(); i++){
+//            Log.v(tag, adapter.getItem(i));
+//        }
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner startRooms = (Spinner) findViewById(R.id.start_room);
+        startRooms.setAdapter(adapter);
+        startRooms.invalidate();
+    }
+
+    private void setEndBuildings(List<String> buildings){
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, buildings);
+//        String tag = "buildings";
+//        Log.v(tag, String.valueOf(buildings.size()));
+//        for(int i = 0; i < adapter.getCount(); i++){
+//            Log.v(tag, adapter.getItem(i));
+//        }
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner endBuilding = (Spinner) findViewById(R.id.destination_building);
+        endBuilding.setAdapter(adapter);
+        endBuilding.invalidate();
+    }
+
+    private void setEndRooms(List<String> rooms){
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, rooms);
+//        String tag = "buildings";
+//        Log.v(tag, String.valueOf(rooms.size()));
+//        for(int i = 0; i < adapter.getCount(); i++){
+//            Log.v(tag, adapter.getItem(i));
+//        }
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner endRooms = (Spinner) findViewById(R.id.destination_room);
+        endRooms.setAdapter(adapter);
+        endRooms.invalidate();
     }
 }
