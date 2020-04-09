@@ -51,4 +51,6 @@
     <string name="recent_routes_distance"><![CDATA[Distance: %1$d ft.]]></string>
     <string name="recent_routes_home_btn_text">Home</string>
     <string name="recent_routes_calc_btn_text">Calculate Route</string>
+    <string name="home_building_dropdown_label">Building</string>
+    <string name="home_room_dropdown_label">Room</string>
 </resources>

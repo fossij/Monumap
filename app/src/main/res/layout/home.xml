@@ -47,19 +47,44 @@
                 android:id="@+id/start_text"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginTop="22dp"
                 android:width="100sp"
                 android:text="@string/start_home" />
 
-            <Spinner
-                android:id="@+id/start_building"
-                android:layout_width="143dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="30dp" />
+                android:orientation="vertical"
+                android:layout_marginEnd="15dp">
 
-            <Spinner
-                android:id="@+id/start_room"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                <TextView
+                    android:text="@string/home_building_dropdown_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"/>
+
+                <Spinner
+                    android:id="@+id/start_building"
+                    android:layout_width="143dp"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:text="@string/home_room_dropdown_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"/>
+
+                <Spinner
+                    android:id="@+id/start_room"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -77,19 +102,44 @@
                 android:id="@+id/destination_text"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginTop="22dp"
                 android:width="100sp"
                 android:text="@string/destination_home" />
 
-            <Spinner
-                android:id="@+id/destination_building"
-                android:layout_width="143dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="30dp" />
+                android:orientation="vertical"
+                android:layout_marginEnd="15dp">
 
-            <Spinner
-                android:id="@+id/destination_room"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                <TextView
+                    android:text="@string/home_building_dropdown_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"/>
+
+                <Spinner
+                    android:id="@+id/destination_building"
+                    android:layout_width="143dp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:text="@string/home_room_dropdown_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"/>
+
+                <Spinner
+                    android:id="@+id/destination_room"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
 
         <Button
