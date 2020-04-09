@@ -9,6 +9,8 @@ public class Node {
     private int m_Floor = Integer.MIN_VALUE;
     private String m_FloorName;
     private List<NodeAttribute> m_Attributes = new ArrayList<>();
+    //Christian also created setters and getters
+    private String m_beaconMajorID;
 
     // Description:
     // a node is defined as an id number and a name
@@ -81,9 +83,17 @@ public class Node {
         return m_Id;
     }
 
+    public void setbeaconMajorID(String m_beaconMajorID) {
+        this.m_beaconMajorID = m_beaconMajorID;
+    }
+    public String getbeaconMajorID() {
+        return m_beaconMajorID;
+    }
+
     public String getName(){
         return m_Name;
     }
+
 
     @Override
     public String toString() {

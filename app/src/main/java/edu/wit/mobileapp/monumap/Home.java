@@ -1,5 +1,6 @@
 package edu.wit.mobileapp.monumap;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +25,7 @@ import edu.wit.mobileapp.monumap.Entities.Direction;
 import edu.wit.mobileapp.monumap.Entities.Instruction;
 import edu.wit.mobileapp.monumap.Entities.Location;
 import edu.wit.mobileapp.monumap.Entities.Route;
+import edu.wit.mobileapp.monumap.Mapping.Edge;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
@@ -34,6 +36,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
         initializeStorage();
+
+        //TODO CHECK IF IT IS okay to move to api 23 from 22 with team so we can getr a bluetooth prompt
+        // for android 10 devices one must get permission for coarse location in order to use beacon services
+        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1234);
 
         // create toolbar
         Toolbar toolbar = findViewById(R.id.home_toolbar);
@@ -75,9 +81,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 //instructions.add(new Instruction("Take the stairs", Direction.STAIRS, 1, 1));
                 int duration = 3;
                 int distance = 3;
-
+                //ToDo enter in Lniked LIst in order to pass Edge list to instructions
                 // store in new route and go to instructions page
-                Route route = new Route(instructions, start, destination, duration, distance, 0);
+                Route route = new Route(instructions, start, destination, duration, distance, 0,);
                 Intent i = new Intent(Home.this, Instructions.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("currentRoute", route);

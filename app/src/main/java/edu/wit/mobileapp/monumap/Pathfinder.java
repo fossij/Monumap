@@ -25,7 +25,7 @@ public class Pathfinder {
     private void findPaths(Node source)
     {
         //dijkstra's algorithm
-        ArrayList<Integer> unvisited = new ArrayList<Integer>();
+        ArrayList<Integer> unvisited = new ArrayList<Integer>(); // keeps track of what one has and hasnt visited generic so it can hold nodes and good practice
         ArrayList<Integer> visited = new ArrayList<Integer>();
         int src = source.getId();
         distance = new double[map.getNodes().size()];
