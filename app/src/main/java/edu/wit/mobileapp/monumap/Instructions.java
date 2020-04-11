@@ -272,6 +272,7 @@ public class Instructions extends AppCompatActivity implements BeaconConsumer {
         String minor;
 
         //ToDo debug datatype disagreement do i have to create an Edge[] constructor
+        //beaconOrder is list<Edge>
         beaconOrderArray= beaconOrder.toArray(); //trying to convert Linked list of edge to Array list so I can index everytime a beacon is successfully found
 
         // get current node iterating through
@@ -295,7 +296,7 @@ public class Instructions extends AppCompatActivity implements BeaconConsumer {
                 beaconManager.startMonitoringBeaconsInRegion(expectedRegion);
                 beaconManager.startMonitoringBeaconsInRegion(unexpectedRegion);
 
-                isScanning = true;
+                //isScanning = true;
                 //RemoteException to catch Errors with the Android services beaconManager is accessing
             } catch (RemoteException e) {
                 e.printStackTrace();
