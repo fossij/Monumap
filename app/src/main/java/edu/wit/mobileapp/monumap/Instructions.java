@@ -1,10 +1,10 @@
 package edu.wit.mobileapp.monumap;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Stack;
 
 import edu.wit.mobileapp.monumap.Adapters.InstructionsListAdapter;
@@ -24,12 +25,14 @@ import edu.wit.mobileapp.monumap.Dialogs.InstructionInfo;
 import edu.wit.mobileapp.monumap.Entities.Instruction;
 import edu.wit.mobileapp.monumap.Entities.Route;
 
+
 public class Instructions extends AppCompatActivity {
     private Route currentRoute;
     private InstructionsListAdapter adapter;
     private ProgressBar progressBar;
     private ArrayList<Instruction> instructions;
     private Stack<Instruction> previousInstructions;
+    private TextToSpeech tts;
 
     private BottomNavigationView mBottomNavigationView;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -58,6 +61,26 @@ public class Instructions extends AppCompatActivity {
         currentRoute = (Route) getIntent().getSerializableExtra("currentRoute");
         instructions = (ArrayList<Instruction>) currentRoute.getInstructions().clone();     // clone to not overwrite base instructions for route
         previousInstructions = new Stack<>();
+
+        //create textToSpeech object
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int ttsLang = tts.setLanguage(Locale.US);
+
+                    if (ttsLang == TextToSpeech.LANG_MISSING_DATA
+                            || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        //error
+                    } else {
+                        //error
+                    }
+                    //success
+                } else {
+                    //some other error
+                }
+            }
+        });
 
         // store new route in recent routes
         RecentRoutes.updateRecentRoutes(getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE), currentRoute);
@@ -125,6 +148,14 @@ public class Instructions extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         progressBar.setProgress(progressBar.getProgress() - 1);
 
+        //text to speech
+        String data = previousInstruction.getText();
+        int speechStatus = tts.speak(data, TextToSpeech.QUEUE_FLUSH, null);
+
+        if (speechStatus == TextToSpeech.ERROR) {
+            //error
+        }
+
         // if next instruction was last, change next button text back to "next" and remove
         if(instructions.size() == 2) {
             // change button text back to "next"
@@ -144,6 +175,14 @@ public class Instructions extends AppCompatActivity {
         previousInstructions.push(currentInstruction);
         adapter.notifyDataSetChanged();
         progressBar.setProgress(progressBar.getProgress() + 1);
+
+        //text to speech
+        String data = instructions.get(0).getText();
+        int speechStatus = tts.speak(data, TextToSpeech.QUEUE_FLUSH, null, null);
+
+        if (speechStatus == TextToSpeech.ERROR) {
+            //error
+        }
 
         // if last instruction, change button to complete route
         if(instructions.size() == 1) {
