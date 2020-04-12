@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
@@ -46,13 +47,13 @@ public class Instructions extends AppCompatActivity implements BeaconConsumer {
     private ArrayList<String> idListDelimeter;// one imp where pathfinding returns a string with both the Major and Minor Id with a delimeter in the middle
     private ArrayList <String> majorIdList;
     private ArrayList <String> minorIdList;
-    private String minorIdArray[]={ "00001","00002","00003","00004","00005"};
-    private String majorIdArray[]={"00000","00000","00000","00000","00000"};
+    private String minorIdArray[]={ "0","1","2","3"};
+    private String majorIdArray[]={"0","0","0","0"};
     private String majorId;
     private String minorId;
 
     private int beaconIndexer=0;
-    private int beaconIdListSize;
+    private int beaconIdListSize=4;
     private boolean firstScan= true;
 
     private BottomNavigationView mBottomNavigationView;
@@ -248,12 +249,16 @@ public class Instructions extends AppCompatActivity implements BeaconConsumer {
                     stopScanning(anyRegion);
                     stopScanning(expectedRegion);
                     //reRoute();
+                    Toast.makeText(Instructions.this, "Inncorrect beacon Identified!: REROUTE USER", Toast.LENGTH_LONG).show();
+
                 }
                 else if (region.getId2().equals(majorId) && firstScan== true)
                 {// successful exiting of the expected region; start process over again
                     stopScanning(anyRegion);
                     stopScanning(expectedRegion);
                     beaconIndexer ++;
+                    Toast.makeText(Instructions.this, "Correct beacon Identified!: Move on to the next step", Toast.LENGTH_LONG).show();
+                    //nextOperation(item);
                     //TODO increment the instructions possibly(dont know how instructions get made from nodes i.e how many nodes per instruction? how many nodes are passed b4 moving to next instruction/ how the could corr)
                     //TODO figure out possible end case so we dont get a null pointer !!!!!!!!!!SOLVED!!!!!- by creating the Identifiers in the conditional statement we should never over incement
                     startScanning();
@@ -299,6 +304,7 @@ public class Instructions extends AppCompatActivity implements BeaconConsumer {
             }
         else
         {
+            Toast.makeText(Instructions.this, "End of beacon pathfinding: You made it to your Destination", Toast.LENGTH_LONG).show();
             //TODo implement
             // You have made it to your destination
         }

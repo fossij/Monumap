@@ -1,5 +1,6 @@
 package edu.wit.mobileapp.monumap;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,6 +46,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         setContentView(R.layout.home);
         initializeStorage();
         JsonMapParser.setContext(getApplicationContext());
+
+        //christian
+        // for android 10 devices one must get permission for coarse location in order to use beacon services
+        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1234);
 
         m_HomeController = new HomeController(this, getApplicationContext());
         m_HomeController.open();
