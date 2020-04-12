@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -86,8 +87,8 @@ public class RecentRoutes extends AppCompatActivity {
         // update list with new Route
         recentRoutesList.add(0, recentRoute);
         if(recentRoutesList.size() > 20) {
-            int count = recentRoutesList.size();
-            while(count > 20) {
+            int count = recentRoutesList.size() - 1;
+            while(count >= 20) {
                 recentRoutesList.remove(count);
                 count--;
             }
