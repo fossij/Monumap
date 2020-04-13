@@ -5,6 +5,7 @@ import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -72,15 +73,27 @@ public class Instructions extends AppCompatActivity {
                     if (ttsLang == TextToSpeech.LANG_MISSING_DATA
                             || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
                         //error
+                        Log.e("error", "TTS error on Instructions page creation");
                     } else {
                         //error
+                        Log.e("error", "TTS error on Instructions page creation");
                     }
                     //success
                 } else {
                     //some other error
+                    Log.e("error", "TTS error on Instructions page creation");
                 }
             }
         });
+
+        //speak the first instruction
+        String data = instructions.get(0).getText();
+        int speechStatus = tts.speak(data, TextToSpeech.QUEUE_FLUSH, null, null);
+
+        if (speechStatus == TextToSpeech.ERROR) {
+            //error
+            Log.e("error", "TTS error on Instructions page creation");
+        }
 
         // store new route in recent routes
         RecentRoutes.updateRecentRoutes(getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE), currentRoute);
@@ -154,6 +167,7 @@ public class Instructions extends AppCompatActivity {
 
         if (speechStatus == TextToSpeech.ERROR) {
             //error
+            Log.e("error", "TTS error on previousOperation");
         }
 
         // if next instruction was last, change next button text back to "next" and remove
@@ -182,6 +196,7 @@ public class Instructions extends AppCompatActivity {
 
         if (speechStatus == TextToSpeech.ERROR) {
             //error
+            Log.e("error", "TTS error on nextOperation");
         }
 
         // if last instruction, change button to complete route
