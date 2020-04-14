@@ -1,11 +1,10 @@
 package edu.wit.mobileapp.monumap;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AppCompatActivity;
-import android.support.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -287,8 +286,9 @@ public class Instructions extends AppCompatActivity implements BeaconConsumer {
                 //search for any beacon connection, once conected we shall search for the more specified region
                 if (firstScan) {
                     Region anyRegion = new Region("anyRegion", null, null, null);
-                    beaconManager.startMonitoringBeaconsInRegion(anyRegion);
                     firstScan=false;
+                    beaconManager.startMonitoringBeaconsInRegion(anyRegion);
+
                 }
                 else//an unspecified beacon has been found, scann for the specified one now to check if that beacon is the correct one
                 {

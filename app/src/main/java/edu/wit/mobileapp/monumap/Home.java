@@ -6,15 +6,15 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import com.google.android.material.navigation.NavigationView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,17 +23,11 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import edu.wit.mobileapp.monumap.Controllers.HomeController;
 import edu.wit.mobileapp.monumap.Dialogs.NoRoute;
 import edu.wit.mobileapp.monumap.Dialogs.Settings;
-import edu.wit.mobileapp.monumap.Entities.Direction;
-import edu.wit.mobileapp.monumap.Entities.Instruction;
-import edu.wit.mobileapp.monumap.Entities.Location;
 import edu.wit.mobileapp.monumap.Entities.Route;
 import edu.wit.mobileapp.monumap.Mapping.JsonMapParser;
 
