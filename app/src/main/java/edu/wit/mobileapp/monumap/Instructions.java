@@ -86,15 +86,6 @@ public class Instructions extends AppCompatActivity {
             }
         });
 
-        //speak the first instruction
-        String data = instructions.get(0).getText();
-        int speechStatus = tts.speak(data, TextToSpeech.QUEUE_FLUSH, null, null);
-
-        if (speechStatus == TextToSpeech.ERROR) {
-            //error
-            Log.e("error", "TTS error on Instructions page creation");
-        }
-
         // store new route in recent routes
         RecentRoutes.updateRecentRoutes(getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE), currentRoute);
 
@@ -128,6 +119,15 @@ public class Instructions extends AppCompatActivity {
                 instructionInfo.show(getSupportFragmentManager(), "InstructionInfoDialog");
             }
         });
+
+        //speak the first instruction
+        String data = instructions.get(0).getText();
+        int speechStatus = tts.speak(data, TextToSpeech.QUEUE_FLUSH, null, null);
+
+        if (speechStatus == TextToSpeech.ERROR) {
+            //error
+            Log.e("error", "TTS error on Instructions page creation");
+        }
     }
 
     // options menu
@@ -190,15 +190,6 @@ public class Instructions extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         progressBar.setProgress(progressBar.getProgress() + 1);
 
-        //text to speech
-        String data = instructions.get(0).getText();
-        int speechStatus = tts.speak(data, TextToSpeech.QUEUE_FLUSH, null, null);
-
-        if (speechStatus == TextToSpeech.ERROR) {
-            //error
-            Log.e("error", "TTS error on nextOperation");
-        }
-
         // if last instruction, change button to complete route
         if(instructions.size() == 1) {
             // change next button text to "complete route"
@@ -210,6 +201,15 @@ public class Instructions extends AppCompatActivity {
             Complete complete = new Complete();
             complete.show(this.getSupportFragmentManager(), "CompleteDialog");
             return;
+        }
+
+        //text to speech
+        String data = instructions.get(0).getText();
+        int speechStatus = tts.speak(data, TextToSpeech.QUEUE_FLUSH, null, null);
+
+        if (speechStatus == TextToSpeech.ERROR) {
+            //error
+            Log.e("error", "TTS error on nextOperation");
         }
 
         // set previous button to visible if passed first instruction
