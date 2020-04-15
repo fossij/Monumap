@@ -29,7 +29,8 @@ To install and setup Monumap, you must follow these steps:
    - The specifications are not important during download and can be set to whatever you like.
 2. Once AndroidStudio has been downloaded, launch it. This will open the home/welcome page.
 3. Click on **Check out project from Version Control > Git** in the right-hand panel.
-4. In the popup window, paste the Monumap project URL, select the directory you'd like to save the project in, and click the **Clone** button.
+4. In the popup window, paste the Monumap project repository URL, select the directory you'd like to save the project in, and click the **Clone** button.
+   - The Monumap project repository URL can be copied from the project's home page on GitHub: Click on the green **Clone or download** button, specify to clone with HTTPS, and copy the link provided in the tab.
 5. At this point, the project should load and open in the AndroidStudio editor. You have now cloned and setup the app as needed.
 
 
