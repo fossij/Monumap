@@ -34,6 +34,7 @@ public class Instructions extends AppCompatActivity {
     private ArrayList<Instruction> instructions;
     private Stack<Instruction> previousInstructions;
     private TextToSpeech tts;
+    private boolean ttsEnabled;
 
     private BottomNavigationView mBottomNavigationView;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -62,29 +63,6 @@ public class Instructions extends AppCompatActivity {
         currentRoute = (Route) getIntent().getSerializableExtra("currentRoute");
         instructions = (ArrayList<Instruction>) currentRoute.getInstructions().clone();     // clone to not overwrite base instructions for route
         previousInstructions = new Stack<>();
-
-        //create textToSpeech object
-        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    int ttsLang = tts.setLanguage(Locale.US);
-
-                    if (ttsLang == TextToSpeech.LANG_MISSING_DATA
-                            || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        //error
-                        Log.e("error", "TTS error on Instructions page creation");
-                    } else {
-                        //error
-                        Log.e("error", "TTS error on Instructions page creation");
-                    }
-                    //success
-                } else {
-                    //some other error
-                    Log.e("error", "TTS error on Instructions page creation");
-                }
-            }
-        });
 
         // store new route in recent routes
         RecentRoutes.updateRecentRoutes(getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE), currentRoute);
@@ -120,13 +98,36 @@ public class Instructions extends AppCompatActivity {
             }
         });
 
-        //speak the first instruction
-        String data = instructions.get(0).getText();
-        int speechStatus = tts.speak(data, TextToSpeech.QUEUE_FLUSH, null, null);
+        //create textToSpeech object
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int ttsLang = tts.setLanguage(Locale.US);
 
-        if (speechStatus == TextToSpeech.ERROR) {
-            //error
-            Log.e("error", "TTS error on Instructions page creation");
+                    if (ttsLang == TextToSpeech.LANG_MISSING_DATA
+                            || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        //error
+                        Log.e("error", "TTS error on Instructions page creation");
+                    }
+                    //success
+                } else {
+                    //some other error
+                    Log.e("error", "TTS error on Instructions page creation");
+                }
+            }
+        });
+        ttsEnabled = getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE).getBoolean(getString(R.string.sp_textToSpeechEnabled), false);
+
+        //speak the first instruction
+        if(ttsEnabled) {
+            String data = instructions.get(0).getText();
+            int speechStatus = tts.speak(data, TextToSpeech.QUEUE_FLUSH, null, null);
+
+            if (speechStatus == TextToSpeech.ERROR) {
+                //error
+                Log.e("error", "TTS error on Instructions page creation");
+            }
         }
     }
 
@@ -162,12 +163,14 @@ public class Instructions extends AppCompatActivity {
         progressBar.setProgress(progressBar.getProgress() - 1);
 
         //text to speech
-        String data = previousInstruction.getText();
-        int speechStatus = tts.speak(data, TextToSpeech.QUEUE_FLUSH, null);
+        if(ttsEnabled) {
+            String data = previousInstruction.getText();
+            int speechStatus = tts.speak(data, TextToSpeech.QUEUE_FLUSH, null);
 
-        if (speechStatus == TextToSpeech.ERROR) {
-            //error
-            Log.e("error", "TTS error on previousOperation");
+            if (speechStatus == TextToSpeech.ERROR) {
+                //error
+                Log.e("error", "TTS error on previousOperation");
+            }
         }
 
         // if next instruction was last, change next button text back to "next" and remove
@@ -204,12 +207,14 @@ public class Instructions extends AppCompatActivity {
         }
 
         //text to speech
-        String data = instructions.get(0).getText();
-        int speechStatus = tts.speak(data, TextToSpeech.QUEUE_FLUSH, null, null);
+        if(ttsEnabled) {
+            String data = instructions.get(0).getText();
+            int speechStatus = tts.speak(data, TextToSpeech.QUEUE_FLUSH, null, null);
 
-        if (speechStatus == TextToSpeech.ERROR) {
-            //error
-            Log.e("error", "TTS error on nextOperation");
+            if (speechStatus == TextToSpeech.ERROR) {
+                //error
+                Log.e("error", "TTS error on nextOperation");
+            }
         }
 
         // set previous button to visible if passed first instruction
