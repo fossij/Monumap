@@ -114,6 +114,10 @@ public class Map {
     {
         Map newMap = new Map(this.m_Name + "_handimap");
         EdgeAttribute stairs = EdgeAttribute.STAIRS;
+        for(Node n : getNodes())
+        {
+            newMap.addNode(n);
+        }
         for(Edge e : m_Edges)
         {
             if(e.getAttribute(stairs))
@@ -122,10 +126,6 @@ public class Map {
             } else {
                 newMap.addEdge(e);
             }
-        }
-        for(Node n : getNodes())
-        {
-            newMap.addNode(n);
         }
         return newMap;
     }

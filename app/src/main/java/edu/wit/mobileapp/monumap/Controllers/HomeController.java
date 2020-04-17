@@ -1,7 +1,6 @@
 package edu.wit.mobileapp.monumap.Controllers;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,11 +8,13 @@ import java.util.List;
 import edu.wit.mobileapp.monumap.Entities.Route;
 import edu.wit.mobileapp.monumap.Entities.RouteParser;
 import edu.wit.mobileapp.monumap.Home;
-import edu.wit.mobileapp.monumap.Mapping.Edge;
 import edu.wit.mobileapp.monumap.Mapping.Map;
 import edu.wit.mobileapp.monumap.Mapping.Node;
 import edu.wit.mobileapp.monumap.Models.HomeModel;
 import edu.wit.mobileapp.monumap.Pathfinder;
+import edu.wit.mobileapp.monumap.R;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class HomeController implements Controller {
     protected Home m_View;
@@ -76,7 +77,8 @@ public class HomeController implements Controller {
             return null;
         }
         else{
-            Pathfinder pf = new Pathfinder(foundMap);
+            boolean wheelChairAccess = m_Context.getSharedPreferences(m_Context.getString(R.string.preferences), MODE_PRIVATE).getBoolean(m_Context.getString(R.string.sp_wheelchairAccessibilityEnabled), false);
+            Pathfinder pf = new Pathfinder(foundMap, wheelChairAccess);
             return RouteParser.parse(pf.makeRoute(begin, end));
         }
     }
