@@ -48,6 +48,12 @@ public class RouteParser {
             if (d == Direction.STRAIGHT && i != list.size() - 1) {
                 continue;
             }else{
+                if(currentEdge.getPointA().hasBeacon()){
+                    instructions.add(new Instruction(text, d, (int) (continuedDistance * feetPerSecond), (int) continuedDistance, currentEdge.getPointA().getBeaconID()));
+                }
+                else if(currentEdge.getPointB().hasBeacon()){
+                    instructions.add(new Instruction(text, d, (int) (continuedDistance * feetPerSecond), (int) continuedDistance, currentEdge.getPointB().getBeaconID()));
+                }
                 instructions.add(new Instruction(text, d, (int) (continuedDistance * feetPerSecond), (int) continuedDistance));
                 continuedDistance = 0;
             }

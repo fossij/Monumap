@@ -7,6 +7,7 @@ public class Node {
     private int m_Id;
     private Point m_Location = new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
     private int m_Floor = Integer.MIN_VALUE;
+    private IBeaconID m_BeaconID;
     private String m_FloorName;
     private List<NodeAttribute> m_Attributes = new ArrayList<>();
 
@@ -64,7 +65,7 @@ public class Node {
     }
 
     // Description:
-    // Set the x floor name
+    // Set the floor name
     public void setFloorName(String floorName) {
         this.m_FloorName = floorName;
     }
@@ -73,6 +74,22 @@ public class Node {
     // Get the floor name
     public String getFloorName() {
         return m_FloorName;
+    }
+
+    public boolean hasBeacon(){
+        return getBeaconID() != null;
+    }
+
+    // Description:
+    // Get the IBeaconID
+    public IBeaconID getBeaconID() {
+        return m_BeaconID;
+    }
+
+    // Description:
+    // Set the IBeaconID
+    public void setBeaconID(IBeaconID BeaconID) {
+        this.m_BeaconID = BeaconID;
     }
 
     // Description:

@@ -1,12 +1,17 @@
 package edu.wit.mobileapp.monumap.Mapping;
 import android.content.Context;
 
+import com.google.gson.JsonObject;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 public class JsonMapParser {
 
@@ -106,6 +111,12 @@ public class JsonMapParser {
             node.put("Floor", n.getFloor());
             node.put("FloorName", n.getFloorName());
             node.put("Name", n.getName());
+            if(n.hasBeacon()){
+                JSONObject ibec = new JSONObject();
+                ibec.put("MajorID", n.getBeaconID().getMajorID());
+                ibec.put("MinorID", n.getBeaconID().getMinorID());
+                node.put("IBeaconID", ibec);
+            }
             JSONArray list = new JSONArray();
             for(int i =0; i < n.getAttributes().size(); i++){
                 NodeAttribute nodeAttribute = n.getAttributes().get(i);
@@ -162,6 +173,13 @@ public class JsonMapParser {
                 Node node = new Node(id, (String)n.get("Name"), (double)n.get("X"), (double)n.get("Y"));
                 node.setFloorName((String) n.get("FloorName"));
                 node.setFloor((int) (long)n.get("Floor"));
+                if(n.keySet().contains("IBeaconID")){
+                    JSONObject bec = (JSONObject) n.get("IBeaconID");
+                    int becMajor = (int) bec.get("MajorID");
+                    int becMinor = (int) bec.get("MinorID");
+                    if(becMajor >= 0 && becMinor >= 0)
+                        node.setBeaconID(new IBeaconID(becMajor, becMinor));
+                }
                 JSONArray atts = (JSONArray) n.get("Attributes");
                 Iterator<String> attsItt = atts.iterator();
                 while(attsItt.hasNext()){

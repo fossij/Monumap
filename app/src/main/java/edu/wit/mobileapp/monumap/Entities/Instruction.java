@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 
 import java.io.Serializable;
 
+import edu.wit.mobileapp.monumap.Mapping.IBeaconID;
 import edu.wit.mobileapp.monumap.R;
 
 public class Instruction implements Serializable {
@@ -14,6 +15,13 @@ public class Instruction implements Serializable {
     private int duration;
     private int distance;
     private Context context;
+    private IBeaconID beacon;
+
+    public Instruction(String text, Direction direction, int duration, int distance, IBeaconID beacon)
+    {
+        this(text, direction, duration, distance);
+
+    }
 
     public Instruction(String text, Direction direction, int duration, int distance) {
         this.text = text;
@@ -64,4 +72,9 @@ public class Instruction implements Serializable {
     public int getDistance() {
         return this.distance;
     }
+
+    public IBeaconID getIBeacon(){
+        return this.beacon;
+    }
+
 }
