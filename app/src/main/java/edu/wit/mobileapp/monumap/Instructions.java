@@ -25,9 +25,11 @@ import edu.wit.mobileapp.monumap.Dialogs.Complete;
 import edu.wit.mobileapp.monumap.Dialogs.InstructionInfo;
 import edu.wit.mobileapp.monumap.Entities.Instruction;
 import edu.wit.mobileapp.monumap.Entities.Route;
+import edu.wit.mobileapp.monumap.Mapping.IBeaconCallBackInterface;
+import edu.wit.mobileapp.monumap.Mapping.IBeaconID;
 
 
-public class Instructions extends AppCompatActivity {
+public class Instructions extends AppCompatActivity implements IBeaconCallBackInterface {
     private Route currentRoute;
     private InstructionsListAdapter adapter;
     private ProgressBar progressBar;
@@ -35,6 +37,7 @@ public class Instructions extends AppCompatActivity {
     private Stack<Instruction> previousInstructions;
     private TextToSpeech tts;
     private boolean ttsEnabled;
+    private BeaconListener beaconListener;
 
     private BottomNavigationView mBottomNavigationView;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -66,6 +69,9 @@ public class Instructions extends AppCompatActivity {
 
         // store new route in recent routes
         RecentRoutes.updateRecentRoutes(getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE), currentRoute);
+
+        //instantiate beaconListener
+        beaconListener = new BeaconListener(this, this);
 
         // create nav menu
         mBottomNavigationView = findViewById(R.id.nav_view);
@@ -129,6 +135,8 @@ public class Instructions extends AppCompatActivity {
                 Log.e("error", "TTS error on Instructions page creation");
             }
         }
+
+
     }
 
     // options menu
@@ -222,5 +230,15 @@ public class Instructions extends AppCompatActivity {
         if(!prev.isVisible()) {
             prev.setVisible(true);
         }
+    }
+
+    @Override
+    public void CorrectBeaconReached(IBeaconID id) {
+
+    }
+
+    @Override
+    public void IncorrectBeaconReached(IBeaconID id) {
+
     }
 }

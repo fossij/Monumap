@@ -31,4 +31,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation files('src\\main\\java\\edu\\wit\\mobileapp\\monumap\\Mapping\\gson-2.8.6.jar')
     implementation files('src\\main\\java\\edu\\wit\\mobileapp\\monumap\\Mapping\\json-simple-1.1.1.jar')
+    //Android Beacon Library dependency
+    implementation 'org.altbeacon:android-beacon-library:2+'
 }
