@@ -1,9 +1,12 @@
 package edu.wit.mobileapp.monumap;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -39,12 +42,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private SharedPreferences sharedPreferences;
     private HomeController m_HomeController;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
         initializeStorage();
         JsonMapParser.setContext(getApplicationContext());
+
+        // for android 10 devices one must get permission for coarse location in order to use beacon services
+        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1234);
 
         m_HomeController = new HomeController(this, getApplicationContext());
         m_HomeController.open();
