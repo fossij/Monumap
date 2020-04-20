@@ -1,5 +1,4 @@
 package edu.wit.mobileapp.monumap.Mapping;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -116,6 +115,13 @@ public class Edge {
     public boolean getAttribute(EdgeAttribute att) {
         return m_Attributes.contains(att);
     }
+
+    // Description:
+    // Returns a list of all the attributes of the edge
+    public List<EdgeAttribute> getAttributes() {
+        return m_Attributes;
+    }
+
 
     // Description
     // Swaps the order of the nodes, which is A which is B

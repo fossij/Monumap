@@ -9,6 +9,7 @@ import edu.wit.mobileapp.monumap.Mapping.JsonMapParser;
 import edu.wit.mobileapp.monumap.Mapping.Map;
 import edu.wit.mobileapp.monumap.Mapping.Node;
 
+
 public class Pathfinder {
 
     //map from JSONMapParser
@@ -18,10 +19,15 @@ public class Pathfinder {
     private double distance[];
 
     //constructor, sets map attribute to input map and initializes previous and distance arrays
-    public Pathfinder(Map m){
-        this.map = m;
+    public Pathfinder(Map m, boolean wheelChairAccess){
         this.previous = new int[0];
         this.distance = new double[0];
+        if(wheelChairAccess)
+        {
+            this.map = m.getHandiMap();
+        } else {
+            this.map = m;
+        }
     }
 
     //runs dijkstra's algorithm with designated source node, modifies previous and distance arrays
@@ -144,7 +150,7 @@ public class Pathfinder {
     public static void main(String args[])
     {
         //make the sample map
-        Pathfinder temp = new Pathfinder(JsonMapParser.testMap());
+        Pathfinder temp = new Pathfinder(JsonMapParser.testMap(), false);
         //pretend the start is ________
         Node src = temp.getMap().getNode(4);
         Node dest = temp.getMap().getNode(11);

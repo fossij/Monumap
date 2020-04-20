@@ -1,5 +1,4 @@
 package edu.wit.mobileapp.monumap.Mapping;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +7,7 @@ public class Node {
     private int m_Id;
     private Point m_Location = new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
     private int m_Floor = Integer.MIN_VALUE;
+    private IBeaconID m_BeaconID;
     private String m_FloorName;
     private List<NodeAttribute> m_Attributes = new ArrayList<>();
 
@@ -65,7 +65,7 @@ public class Node {
     }
 
     // Description:
-    // Set the x floor name
+    // Set the floor name
     public void setFloorName(String floorName) {
         this.m_FloorName = floorName;
     }
@@ -76,12 +76,31 @@ public class Node {
         return m_FloorName;
     }
 
+    public boolean hasBeacon(){
+        return getBeaconID() != null;
+    }
+
+    // Description:
+    // Get the IBeaconID
+    public IBeaconID getBeaconID() {
+        return m_BeaconID;
+    }
+
+    // Description:
+    // Set the IBeaconID
+    public void setBeaconID(IBeaconID BeaconID) {
+        this.m_BeaconID = BeaconID;
+    }
+
     // Description:
     // Get the x value
     public int getId() {
         return m_Id;
     }
 
+    public String getName(){
+        return m_Name;
+    }
 
     @Override
     public String toString() {
@@ -120,14 +139,9 @@ public class Node {
     }
 
     // Description:
-    // Private class to store x and y values
-    private class Point {
-        double x, y;
-
-        public Point(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
+    // Lists all the attributes for the node
+    public List<NodeAttribute> getAttributes() {
+        return m_Attributes;
     }
-
 }
+

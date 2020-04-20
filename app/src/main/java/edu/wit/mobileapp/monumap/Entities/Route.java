@@ -2,6 +2,11 @@ package edu.wit.mobileapp.monumap.Entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import edu.wit.mobileapp.monumap.Mapping.IBeaconCallBackInterface;
+import edu.wit.mobileapp.monumap.Mapping.IBeaconID;
 
 public class Route implements Serializable {
     private ArrayList<Instruction> instructions;
@@ -42,5 +47,27 @@ public class Route implements Serializable {
 
     public int getId() {
         return this.id;
+    }
+
+    public List<IBeaconID> getBeacons(){
+        LinkedList<IBeaconID> toReturn = new LinkedList<>();
+
+        for(int i = 0; i < instructions.size(); i++){
+            if(instructions.get(i).getIBeacon() != null){
+                toReturn.add(instructions.get(i).getIBeacon());
+            }
+        }
+        return toReturn;
+    }
+
+    public List<IBeaconID> getAcceptableBeacons(){
+        LinkedList<IBeaconID> toReturn = new LinkedList<>();
+
+        for(int i = 0; i < instructions.size(); i++){
+            if(instructions.get(i).getAcceptableBeacons() != null){
+                toReturn.addAll(instructions.get(i).getAcceptableBeacons());
+            }
+        }
+        return toReturn;
     }
 }

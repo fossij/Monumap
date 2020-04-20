@@ -2,10 +2,8 @@ package edu.wit.mobileapp.monumap.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +17,7 @@ public class NoRoute extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.no_route_message)
                 .setTitle(R.string.no_route_title)
-                .setPositiveButton(R.string.no_route_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // complete route, go back to home screen
-                        Intent intent = new Intent(getContext(), null);
-                        startActivity(intent);
-                    }
-                });
+                .setPositiveButton(R.string.no_route_ok, null);
 
         return builder.create();
     }

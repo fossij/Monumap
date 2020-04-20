@@ -1,11 +1,26 @@
 package edu.wit.mobileapp.monumap.Mapping;
+import org.altbeacon.beacon.Beacon;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
-public class Map {
-    private HashMap<Integer, Node> m_Nodes = new HashMap<>();
+public class Map{
+    private HashMap<Integer, Node> m_Nodes = new HashMap();
     private List<Edge> m_Edges = new ArrayList<>();
+    private String m_Name;
+
+    public Map(String name){
+        m_Name = name;
+    }
+
+    // Description:
+    // Used to retrieve the name of the map/building
+    public String getName(){
+        return m_Name;
+    }
 
     // Description:
     // Used to add an edge to a map, returns true if path was made,
@@ -62,7 +77,7 @@ public class Map {
     // Description:
     // returns a list of edges connected to a node
     public List<Edge> getEdges(int id) {
-        ArrayList<Edge> toReturn = new ArrayList<>();
+        ArrayList<Edge> toReturn = new ArrayList();
         for (Edge e : m_Edges) {
             if (e.contains(id)) {
                 toReturn.add(e);
@@ -73,9 +88,29 @@ public class Map {
     }
 
     // Description:
+    // Returns a list of all the edges in the map
+    public List<Edge> getEdges() {
+        return m_Edges;
+    }
+
+    // Description:
     // returns a list of all the nodes
     public List<Node> getNodes() {
         return new ArrayList<>(m_Nodes.values());
+    }
+
+    // Description:
+    // returns a list of all the nodes that aren't hallways
+    public List<Node> getNotableNodes() {
+        List<Node> toReturn = new ArrayList<>();
+        Iterator<Node> iter = m_Nodes.values().iterator();
+        while(iter.hasNext()){
+            Node n = iter.next();
+            if(n.getAttribute(NodeAttribute.CLASSROOM) || n.getAttribute(NodeAttribute.ENTRANCE)){
+                toReturn.add(n);
+            }
+        }
+        return toReturn;
     }
 
     // Description:
@@ -89,6 +124,37 @@ public class Map {
     // Returns whether or not the id to a node is contained in the map
     public boolean containsNode(int id) {
         return m_Nodes.containsKey(id);
+    }
+
+    // Description:
+    // Returns a new Map object without Edges with attribute 'STAIRS'
+    public Map getHandiMap()
+    {
+        Map newMap = new Map(this.m_Name + "_handimap");
+        EdgeAttribute stairs = EdgeAttribute.STAIRS;
+        for(Node n : getNodes())
+        {
+            newMap.addNode(n);
+        }
+        for(Edge e : m_Edges)
+        {
+            if(e.getAttribute(stairs))
+            {
+                continue;
+            } else {
+                newMap.addEdge(e);
+            }
+        }
+        return newMap;
+    }
+
+    public Node getNode(IBeaconID ib){
+        for(Node n: getNodes()){
+            if(n.hasBeacon() && n.getBeaconID().equals(ib)){
+                return n;
+            }
+        }
+        return null;
     }
 }
 
