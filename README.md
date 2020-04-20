@@ -45,7 +45,7 @@ To run the app:
 7. Once you have selected your device from the dropdown, press the play button to the right of the dropdown to run the app. If you have just created your emulator, it may take some time to boot up but let it boot properly. The Monumap app will now open and can be used!
 
 ## Demo video
-Demo video link: 
+Demo video link: [Monumap Demo Video](https://youtu.be/XxBwe8Ai5iY)
 
 ## Contributors
 - Jose Fossi, UI & Backend
