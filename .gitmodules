@@ -1,0 +1,3 @@
+[submodule "MonUmapper"]
+	path = MonUmapper
+	url = https://github.com/Scherflinge/MonumapCreator
