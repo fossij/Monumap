@@ -79,7 +79,7 @@ public class HomeController implements Controller {
         else{
             boolean wheelChairAccess = m_Context.getSharedPreferences(m_Context.getString(R.string.preferences), MODE_PRIVATE).getBoolean(m_Context.getString(R.string.sp_wheelchairAccessibilityEnabled), false);
             Pathfinder pf = new Pathfinder(foundMap, wheelChairAccess);
-            return RouteParser.parse(pf.makeRoute(begin, end));
+            return RouteParser.parse(pf.makeRoute(begin, end), foundMap.getName());
         }
     }
 
@@ -87,13 +87,23 @@ public class HomeController implements Controller {
         LinkedList<String> toReturn = new LinkedList<>();
         for(Map m :m_AvailableMaps){
             if(m.getName().equals(buildingName)){
-                for(Node n :m.getNodes()){
+                for(Node n : m.getNotableNodes()){
                     toReturn.add(n.getName());
                 }
                 break;
             }
         }
         return toReturn;
+    }
+
+    public Map getBuilding(String name){
+        fetchMaps();
+        for(Map m: m_AvailableMaps){
+            if(m.getName().equals(name)){
+                return m;
+            }
+        }
+        return null;
     }
 
     @Override

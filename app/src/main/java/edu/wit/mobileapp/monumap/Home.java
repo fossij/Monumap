@@ -36,6 +36,7 @@ import edu.wit.mobileapp.monumap.Entities.Instruction;
 import edu.wit.mobileapp.monumap.Entities.Location;
 import edu.wit.mobileapp.monumap.Entities.Route;
 import edu.wit.mobileapp.monumap.Mapping.JsonMapParser;
+import edu.wit.mobileapp.monumap.Mapping.Map;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
@@ -115,6 +116,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 Spinner endBuilding = (Spinner) findViewById(R.id.destination_building);
 
                 Route route = m_HomeController.pathFind(startBuilding.getSelectedItem().toString(), startRooms.getSelectedItem().toString(), endBuilding.getSelectedItem().toString(), endRooms.getSelectedItem().toString());
+                Map m = m_HomeController.getBuilding(startBuilding.getSelectedItem().toString());
                 if(route == null) {
                     NoRoute noRoute = new NoRoute();
                     noRoute.show(getSupportFragmentManager(), "NoRouteDialog");
@@ -123,6 +125,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     Intent i = new Intent(Home.this, Instructions.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("currentRoute", route);
+                    //bundle.putSerializable("currentMap", m);
                     i.putExtras(bundle);
                     startActivity(i);
                 }

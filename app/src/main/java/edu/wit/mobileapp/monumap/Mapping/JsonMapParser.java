@@ -8,7 +8,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.KeyStore;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -158,7 +161,6 @@ public class JsonMapParser {
     // Turn a JSON string into a Map
     public static Map stringToMap(String json){
         JSONParser parser = new JSONParser();
-
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(json);
 
@@ -175,8 +177,8 @@ public class JsonMapParser {
                 node.setFloor((int) (long)n.get("Floor"));
                 if(n.keySet().contains("IBeaconID")){
                     JSONObject bec = (JSONObject) n.get("IBeaconID");
-                    int becMajor = (int) bec.get("MajorID");
-                    int becMinor = (int) bec.get("MinorID");
+                    int becMajor = (int)(long) bec.get("MajorID");
+                    int becMinor = (int)(long) bec.get("MinorID");
                     if(becMajor >= 0 && becMinor >= 0)
                         node.setBeaconID(new IBeaconID(becMajor, becMinor));
                 }
@@ -208,5 +210,27 @@ public class JsonMapParser {
             //exception.printStackTrace();
             return new Map("Error");
         }
+    }
+
+    static public List<Map> getListOfMaps(){
+        List<Map> toReturn = new ArrayList<>();
+        try {
+            String path = "";
+            String[] list = m_Context.getAssets().list(path);
+            if (list.length > 0) {
+                // This is a folder
+                for(int i = 0; i < list.length; i++){
+                    Map m = JsonMapParser.parseMap(list[i]);
+                    if(!m.getName().equals("Error")){
+                        toReturn.add(m);
+                    }
+                }
+            }
+        }
+        catch (IOException e) {
+            //return false;
+        }
+
+        return toReturn;
     }
 }

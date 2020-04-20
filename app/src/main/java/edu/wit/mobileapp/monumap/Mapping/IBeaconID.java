@@ -1,6 +1,9 @@
 package edu.wit.mobileapp.monumap.Mapping;
 
-public class IBeaconID {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class IBeaconID implements Serializable {
     private int m_MinorID;
     private int m_MajorID;
 
@@ -14,6 +17,20 @@ public class IBeaconID {
         }
         m_MinorID = minorID;
         m_MajorID = majorID;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IBeaconID iBeaconID = (IBeaconID) o;
+        return m_MinorID == iBeaconID.m_MinorID &&
+                m_MajorID == iBeaconID.m_MajorID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(m_MinorID, m_MajorID);
     }
 
     public int getMajorID() {

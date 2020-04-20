@@ -57,7 +57,17 @@ public class Route implements Serializable {
                 toReturn.add(instructions.get(i).getIBeacon());
             }
         }
+        return toReturn;
+    }
 
+    public List<IBeaconID> getAcceptableBeacons(){
+        LinkedList<IBeaconID> toReturn = new LinkedList<>();
+
+        for(int i = 0; i < instructions.size(); i++){
+            if(instructions.get(i).getAcceptableBeacons() != null){
+                toReturn.addAll(instructions.get(i).getAcceptableBeacons());
+            }
+        }
         return toReturn;
     }
 }

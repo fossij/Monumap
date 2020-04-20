@@ -26,9 +26,9 @@ public class RouteParser {
 
         ArrayList<Instruction> instructions = new ArrayList<>();
 
-        double feetPerSecond = 3.1;
+        double feetPerSecond = 1/(3.1*60);
         double totalDistance = 0;
-
+        List<IBeaconID> acceptableBeacons = new ArrayList<>();
         double continuedDistance = 0;
         for (int i = 0; i < list.size(); i++) {
             Edge currentEdge = list.get(i);
@@ -43,19 +43,29 @@ public class RouteParser {
             }
 
             String text = getText(d, currentEdge.getPointB().getFloor());
-
+            if(currentEdge.getPointB().hasBeacon()){
+                acceptableBeacons.add(currentEdge.getPointB().getBeaconID());
+            }
             continuedDistance += currentEdge.getDistance();
             if (d == Direction.STRAIGHT && i != list.size() - 1) {
                 continue;
             }else{
-                if(currentEdge.getPointA().hasBeacon()){
-                    instructions.add(new Instruction(text, d, (int) (continuedDistance * feetPerSecond), (int) continuedDistance, currentEdge.getPointA().getBeaconID()));
+                if(currentEdge.getPointB().hasBeacon()){
+                    IBeaconID thisBeacon = acceptableBeacons.remove(acceptableBeacons.size()-1);
+                    int timing = (int) (continuedDistance * feetPerSecond);
+                    if (timing<=0){
+                        timing = 1;
+                    }
+                    instructions.add(new Instruction(text, d, timing, (int) continuedDistance, currentEdge.getPointB().getId(), thisBeacon, acceptableBeacons));
                 }
-                else if(currentEdge.getPointB().hasBeacon()){
-                    instructions.add(new Instruction(text, d, (int) (continuedDistance * feetPerSecond), (int) continuedDistance, currentEdge.getPointB().getBeaconID()));
+//                else if(currentEdge.getPointA().hasBeacon()){
+//                    instructions.add(new Instruction(text, d, (int) (continuedDistance * feetPerSecond), (int) continuedDistance, currentEdge.getPointB().getId(), currentEdge.getPointA().getBeaconID()));
+//                }
+                else{
+                    instructions.add(new Instruction(text, d, (int) (continuedDistance * feetPerSecond), (int) continuedDistance, currentEdge.getPointB().getId()));
                 }
-                instructions.add(new Instruction(text, d, (int) (continuedDistance * feetPerSecond), (int) continuedDistance));
                 continuedDistance = 0;
+                acceptableBeacons = new ArrayList<>();
             }
 
             //instructions.add(new Instruction(text, d, (int) (distance * feetPerSecond), (int) distance));
