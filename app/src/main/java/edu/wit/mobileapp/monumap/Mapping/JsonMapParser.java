@@ -1,12 +1,20 @@
 package edu.wit.mobileapp.monumap.Mapping;
 import android.content.Context;
 
+import com.google.gson.JsonObject;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.KeyStore;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 public class JsonMapParser {
 
@@ -106,6 +114,12 @@ public class JsonMapParser {
             node.put("Floor", n.getFloor());
             node.put("FloorName", n.getFloorName());
             node.put("Name", n.getName());
+            if(n.hasBeacon()){
+                JSONObject ibec = new JSONObject();
+                ibec.put("MajorID", n.getBeaconID().getMajorID());
+                ibec.put("MinorID", n.getBeaconID().getMinorID());
+                node.put("IBeaconID", ibec);
+            }
             JSONArray list = new JSONArray();
             for(int i =0; i < n.getAttributes().size(); i++){
                 NodeAttribute nodeAttribute = n.getAttributes().get(i);
@@ -147,7 +161,6 @@ public class JsonMapParser {
     // Turn a JSON string into a Map
     public static Map stringToMap(String json){
         JSONParser parser = new JSONParser();
-
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(json);
 
@@ -162,6 +175,13 @@ public class JsonMapParser {
                 Node node = new Node(id, (String)n.get("Name"), (double)n.get("X"), (double)n.get("Y"));
                 node.setFloorName((String) n.get("FloorName"));
                 node.setFloor((int) (long)n.get("Floor"));
+                if(n.keySet().contains("IBeaconID")){
+                    JSONObject bec = (JSONObject) n.get("IBeaconID");
+                    int becMajor = (int)(long) bec.get("MajorID");
+                    int becMinor = (int)(long) bec.get("MinorID");
+                    if(becMajor >= 0 && becMinor >= 0)
+                        node.setBeaconID(new IBeaconID(becMajor, becMinor));
+                }
                 JSONArray atts = (JSONArray) n.get("Attributes");
                 Iterator<String> attsItt = atts.iterator();
                 while(attsItt.hasNext()){
@@ -190,5 +210,27 @@ public class JsonMapParser {
             //exception.printStackTrace();
             return new Map("Error");
         }
+    }
+
+    static public List<Map> getListOfMaps(){
+        List<Map> toReturn = new ArrayList<>();
+        try {
+            String path = "";
+            String[] list = m_Context.getAssets().list(path);
+            if (list.length > 0) {
+                // This is a folder
+                for(int i = 0; i < list.length; i++){
+                    Map m = JsonMapParser.parseMap(list[i]);
+                    if(!m.getName().equals("Error")){
+                        toReturn.add(m);
+                    }
+                }
+            }
+        }
+        catch (IOException e) {
+            //return false;
+        }
+
+        return toReturn;
     }
 }

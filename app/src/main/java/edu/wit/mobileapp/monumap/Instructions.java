@@ -1,6 +1,7 @@
 package edu.wit.mobileapp.monumap;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -25,9 +26,15 @@ import edu.wit.mobileapp.monumap.Dialogs.Complete;
 import edu.wit.mobileapp.monumap.Dialogs.InstructionInfo;
 import edu.wit.mobileapp.monumap.Entities.Instruction;
 import edu.wit.mobileapp.monumap.Entities.Route;
+import edu.wit.mobileapp.monumap.Entities.RouteParser;
+import edu.wit.mobileapp.monumap.Mapping.IBeaconCallBackInterface;
+import edu.wit.mobileapp.monumap.Mapping.IBeaconID;
+import edu.wit.mobileapp.monumap.Mapping.JsonMapParser;
+import edu.wit.mobileapp.monumap.Mapping.Map;
+import edu.wit.mobileapp.monumap.Mapping.Node;
 
 
-public class Instructions extends AppCompatActivity {
+public class Instructions extends AppCompatActivity implements IBeaconCallBackInterface {
     private Route currentRoute;
     private InstructionsListAdapter adapter;
     private ProgressBar progressBar;
@@ -35,6 +42,8 @@ public class Instructions extends AppCompatActivity {
     private Stack<Instruction> previousInstructions;
     private TextToSpeech tts;
     private boolean ttsEnabled;
+    private BeaconListener beaconListener;
+    private Map map;
 
     private BottomNavigationView mBottomNavigationView;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -44,32 +53,20 @@ public class Instructions extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.nav_prev:
-                    previousOperation(item);
+                    previousOperation(item, true);
                     return true;
                 case R.id.nav_next:
-                    nextOperation(item);
+                    nextOperation(item, true);
                     return true;
             }
             return false;
         }
     };
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_instructions);
-
-        // initialize data
-        currentRoute = (Route) getIntent().getSerializableExtra("currentRoute");
-        instructions = (ArrayList<Instruction>) currentRoute.getInstructions().clone();     // clone to not overwrite base instructions for route
+    private void setUpRoute(Route r){
+        currentRoute = r;
+        instructions = (ArrayList<Instruction>) r.getInstructions().clone();     // clone to not overwrite base instructions for route
         previousInstructions = new Stack<>();
-
-        // store new route in recent routes
-        RecentRoutes.updateRecentRoutes(getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE), currentRoute);
-
-        // create nav menu
-        mBottomNavigationView = findViewById(R.id.nav_view);
-        mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         if(instructions.size() == 1) {
             MenuItem nextButton = mBottomNavigationView.getMenu().findItem(R.id.nav_next);
             nextButton.setTitle("Complete Route");
@@ -97,6 +94,34 @@ public class Instructions extends AppCompatActivity {
                 instructionInfo.show(getSupportFragmentManager(), "InstructionInfoDialog");
             }
         });
+
+        beaconListener.setBeacons(currentRoute.getBeacons());
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_instructions);
+
+        // create nav menu
+        mBottomNavigationView = findViewById(R.id.nav_view);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        beaconListener = new BeaconListener(this, this);
+
+        // initialize data
+        setUpRoute((Route) getIntent().getSerializableExtra("currentRoute"));
+        JsonMapParser.setContext(getApplicationContext());
+        for(Map m:JsonMapParser.getListOfMaps()){
+            if(m.getName().equals(currentRoute.getStart().getBuilding())){
+                map = m;
+                break;
+            }
+        }
+        // store new route in recent routes
+        RecentRoutes.updateRecentRoutes(getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE), currentRoute);
+
+        //instantiate beaconListener
 
         //create textToSpeech object
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -129,6 +154,15 @@ public class Instructions extends AppCompatActivity {
                 Log.e("error", "TTS error on Instructions page creation");
             }
         }
+
+//        final Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                IncorrectBeaconReached(new IBeaconID(1,2));
+//            }
+//        }, 2000);
+        beaconListener.startScanning();
     }
 
     // options menu
@@ -142,6 +176,7 @@ public class Instructions extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.cancel_button) {
+            beaconListener.stopScanning();
             Cancel cancel = new Cancel();
             cancel.show(this.getSupportFragmentManager(), "CancelDialog");
         }
@@ -155,7 +190,7 @@ public class Instructions extends AppCompatActivity {
                 this.currentRoute.getDestination().getLocationName());
     }
 
-    private void previousOperation(MenuItem item) {
+    private void previousOperation(MenuItem item, boolean speak) {
         // get previous instruction (shift list down) --> just add last item from stack to instructions list
         Instruction previousInstruction = previousInstructions.pop();
         instructions.add(0, previousInstruction);
@@ -163,7 +198,7 @@ public class Instructions extends AppCompatActivity {
         progressBar.setProgress(progressBar.getProgress() - 1);
 
         //text to speech
-        if(ttsEnabled) {
+        if(ttsEnabled && speak) {
             String data = previousInstruction.getText();
             int speechStatus = tts.speak(data, TextToSpeech.QUEUE_FLUSH, null);
 
@@ -186,7 +221,7 @@ public class Instructions extends AppCompatActivity {
         }
     }
 
-    private void nextOperation(MenuItem item) {
+    private void nextOperation(MenuItem item, boolean speak) {
         // get next instruction (shift list up) --> just remove first item from instructions list and push to stack
         Instruction currentInstruction = instructions.remove(0);
         previousInstructions.push(currentInstruction);
@@ -203,11 +238,12 @@ public class Instructions extends AppCompatActivity {
         if(instructions.isEmpty()) {
             Complete complete = new Complete();
             complete.show(this.getSupportFragmentManager(), "CompleteDialog");
+            beaconListener.stopScanning();
             return;
         }
 
         //text to speech
-        if(ttsEnabled) {
+        if(ttsEnabled && speak) {
             String data = instructions.get(0).getText();
             int speechStatus = tts.speak(data, TextToSpeech.QUEUE_FLUSH, null, null);
 
@@ -222,5 +258,41 @@ public class Instructions extends AppCompatActivity {
         if(!prev.isVisible()) {
             prev.setVisible(true);
         }
+    }
+
+    @Override
+    public void CorrectBeaconReached(IBeaconID id) {
+        for(Instruction i : currentRoute.getInstructions()){
+            if(id.equals(i.getIBeacon())){
+                int index = currentRoute.getInstructions().indexOf(i);
+                // The thought here is that if index 0 beacon is hit,
+                // previousInstructions should be empty, size = 0
+                // Then an instruction should be pushed onto it,
+                // But if the last instruction is hit,
+                // then don't keep trying to move to the next instruction
+                while(previousInstructions.size() <= index && !instructions.isEmpty()){
+                    boolean speak = previousInstructions.size() == index;
+                    MenuItem nextButton = mBottomNavigationView.getMenu().findItem(R.id.nav_next);
+                    nextOperation(nextButton, speak);
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void IncorrectBeaconReached(IBeaconID id) {
+        if(currentRoute.getAcceptableBeacons().contains(id)) return;
+        beaconListener.stopScanning();
+        Node newStart = map.getNode(id);
+        ArrayList<Instruction> inst = currentRoute.getInstructions();
+        Instruction i = inst.get(inst.size()-1);
+        Node newDest = map.getNode(i.getNodeID());
+        boolean wheelChairAccess = getApplicationContext().getSharedPreferences(getApplicationContext().getString(R.string.preferences), MODE_PRIVATE).getBoolean(getApplicationContext().getString(R.string.sp_wheelchairAccessibilityEnabled), false);
+        Pathfinder pf = new Pathfinder(map, wheelChairAccess);
+        Route newRoute = RouteParser.parse(pf.makeRoute(newStart, newDest));
+        setUpRoute(newRoute);
+        beaconListener.setBeacons(newRoute.getBeacons());
+        beaconListener.startScanning();
     }
 }

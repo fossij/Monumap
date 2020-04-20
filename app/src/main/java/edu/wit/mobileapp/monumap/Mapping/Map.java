@@ -1,9 +1,13 @@
 package edu.wit.mobileapp.monumap.Mapping;
+import org.altbeacon.beacon.Beacon;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
-public class Map {
+public class Map{
     private HashMap<Integer, Node> m_Nodes = new HashMap();
     private List<Edge> m_Edges = new ArrayList<>();
     private String m_Name;
@@ -96,6 +100,20 @@ public class Map {
     }
 
     // Description:
+    // returns a list of all the nodes that aren't hallways
+    public List<Node> getNotableNodes() {
+        List<Node> toReturn = new ArrayList<>();
+        Iterator<Node> iter = m_Nodes.values().iterator();
+        while(iter.hasNext()){
+            Node n = iter.next();
+            if(n.getAttribute(NodeAttribute.CLASSROOM) || n.getAttribute(NodeAttribute.ENTRANCE)){
+                toReturn.add(n);
+            }
+        }
+        return toReturn;
+    }
+
+    // Description:
     // Returns a Node corresponding to an id,
     // if no node is found, null is returned
     public Node getNode(int id) {
@@ -128,6 +146,15 @@ public class Map {
             }
         }
         return newMap;
+    }
+
+    public Node getNode(IBeaconID ib){
+        for(Node n: getNodes()){
+            if(n.hasBeacon() && n.getBeaconID().equals(ib)){
+                return n;
+            }
+        }
+        return null;
     }
 }
 

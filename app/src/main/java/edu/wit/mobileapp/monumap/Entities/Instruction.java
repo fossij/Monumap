@@ -5,7 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import edu.wit.mobileapp.monumap.Mapping.IBeaconID;
 import edu.wit.mobileapp.monumap.R;
 
 public class Instruction implements Serializable {
@@ -14,12 +17,23 @@ public class Instruction implements Serializable {
     private int duration;
     private int distance;
     private Context context;
+    private IBeaconID beacon;
+    private int nodeID;
+    private List<IBeaconID> acceptableBeacons;
 
-    public Instruction(String text, Direction direction, int duration, int distance) {
+    public Instruction(String text, Direction direction, int duration, int distance, int nodeID, IBeaconID beacon, List<IBeaconID> acceptableBeacons)
+    {
+        this(text, direction, duration, distance, nodeID);
+        this.beacon = beacon;
+        this.acceptableBeacons = acceptableBeacons;
+    }
+
+    public Instruction(String text, Direction direction, int duration, int distance, int nodeID) {
         this.text = text;
         this.direction = direction;
         this.duration = duration;
         this.distance = distance;
+        this.nodeID = nodeID;
     }
 
     public Bitmap getDirectionIcon() {
@@ -63,5 +77,21 @@ public class Instruction implements Serializable {
 
     public int getDistance() {
         return this.distance;
+    }
+
+    public int getNodeID() {
+        return nodeID;
+    }
+
+    public IBeaconID getIBeacon(){
+        return this.beacon;
+    }
+
+    public List<IBeaconID> getAcceptableBeacons() {
+        if(acceptableBeacons == null)
+        {
+         return new ArrayList<IBeaconID>();
+        }
+        return acceptableBeacons;
     }
 }
