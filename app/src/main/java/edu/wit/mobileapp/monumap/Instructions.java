@@ -155,13 +155,13 @@ public class Instructions extends AppCompatActivity implements IBeaconCallBackIn
             }
         }
 
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                IncorrectBeaconReached(new IBeaconID(1,2));
-            }
-        }, 2000);
+//        final Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                IncorrectBeaconReached(new IBeaconID(1,2));
+//            }
+//        }, 2000);
         beaconListener.startScanning();
     }
 
