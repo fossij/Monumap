@@ -1,5 +1,6 @@
 package edu.wit.mobileapp.monumap.Mapping;
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.JsonObject;
 
@@ -195,7 +196,12 @@ public class JsonMapParser {
                 JSONObject e = iterator.next();
                 //System.out.println(e);
                 Edge edge = new Edge(toReturn.getNode((int)(long)e.get("P1")), toReturn.getNode((int)(long)e.get("P2")));
-                edge.setFixedDistance((double)e.get("Distance"));
+                try{
+                    edge.setFixedDistance((double)e.get("Distance"));
+                }catch(Exception exception)
+                {
+                    edge.setFixedDistance((double)(int)(long)e.get("Distance"));
+                }
 
                 JSONArray atts = (JSONArray) e.get("Attributes");
                 Iterator<String> attsItt = atts.iterator();
