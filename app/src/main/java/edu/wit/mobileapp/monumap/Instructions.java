@@ -1,6 +1,7 @@
 package edu.wit.mobileapp.monumap;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -158,7 +159,7 @@ public class Instructions extends AppCompatActivity implements IBeaconCallBackIn
 //        handler.postDelayed(new Runnable() {
 //            @Override
 //            public void run() {
-//                IncorrectBeaconReached(new IBeaconID(1,2));
+//                IncorrectBeaconReached(new IBeaconID(1,7));
 //            }
 //        }, 2000);
         beaconListener.startScanning();
@@ -282,8 +283,9 @@ public class Instructions extends AppCompatActivity implements IBeaconCallBackIn
     @Override
     public void IncorrectBeaconReached(IBeaconID id) {
         if(currentRoute.getAcceptableBeacons().contains(id)) return;
-        beaconListener.stopScanning();
         Node newStart = map.getNode(id);
+        if(newStart == null) return;
+        beaconListener.stopScanning();
         ArrayList<Instruction> inst = currentRoute.getInstructions();
         Instruction i = inst.get(inst.size()-1);
         Node newDest = map.getNode(i.getNodeID());

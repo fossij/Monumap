@@ -92,6 +92,10 @@ public class Instruction implements Serializable {
         {
          return new ArrayList<IBeaconID>();
         }
-        return acceptableBeacons;
+        ArrayList<IBeaconID> newacceptableBeacons = new ArrayList<>(acceptableBeacons);
+        if(this.getIBeacon()!=null){
+            newacceptableBeacons.add(this.getIBeacon());
+        }
+        return newacceptableBeacons;
     }
 }
