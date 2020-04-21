@@ -73,7 +73,7 @@ public class HomeController implements Controller {
                 break;
             }
         }
-        if(foundMap == null){
+        if(foundMap == null || begin == null || end == null){
             return null;
         }
         else{

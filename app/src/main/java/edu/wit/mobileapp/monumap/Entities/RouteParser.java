@@ -16,7 +16,7 @@ public class RouteParser {
     }
 
     public static Route parse(List<Edge> list, String building1, String building2) {
-        if (list.size() < 2) {
+        if (list == null || list.size() < 2) {
             return null;
         }
 
